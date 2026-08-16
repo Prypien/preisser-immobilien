@@ -11,6 +11,7 @@
 <link rel="preload" href="../assets/fonts/poppins-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../assets/css/styles.css">
 <link rel="stylesheet" href="../assets/css/bausteine.css">
+<link rel="stylesheet" href="../assets/css/kuer.css">
 <link rel="stylesheet" href="../assets/css/varianten.css">
 </head>
 <body>
@@ -73,7 +74,7 @@
   <div class="container">
     <p class="eyebrow">Arbeitsstand</p>
     <h1>Gestaltungsvarianten</h1>
-    <p class="lab-lead">Für jeden Baustein der Website zwei bis fünf andere Entwürfe. Alle nutzen dieselben
+    <p class="lab-lead">Für jeden Baustein der Website zwei bis sechs andere Entwürfe. Alle nutzen dieselben
       Farben, Schriften, Radien und Abstände wie der bestehende Auftritt — verändert sind nur Anordnung,
       Rhythmus und Bewegung. Die Texte sind überall unverändert übernommen. Der Kopfbereich bleibt, wie er ist,
       und taucht hier deshalb nicht auf.</p>
@@ -86,6 +87,7 @@
       <li><a href="#kontakt">Kontakt</a></li>
       <li><a href="#fuss">Fußbereich</a></li>
       <li><a href="#bildmarke">Bildmarke</a></li>
+      <li><a href="#kuer">Kür</a></li>
     </ul>
   </div>
 </header>
@@ -1301,6 +1303,171 @@
   </div>
 </section>
 
+
+<!-- =====================================================================
+     Kür
+     ===================================================================== -->
+<section class="lab-widget" id="kuer">
+  <div class="container">
+    <p class="eyebrow">Kür</p>
+    <h2>Entwürfe mit mehr Anspruch</h2>
+    <p class="lab-widget-note">Dieselben Schriften, Farben und Texte, aber andere Mittel: mechanische
+      Ziffern, Bilder durch Buchstaben, waagerechter Lauf, die Bildmarke als Blende. Zusammengesetzt zu
+      einer ganzen Seite unter <a class="text-link" href="../variante2/">Variante 2</a>.</p>
+
+    <div class="variant">
+      <div class="variant-bar">
+        <span class="variant-tag">K1</span>
+        <span class="variant-name">Fallblattanzeige</span>
+        <span class="variant-source">Ziffern wie auf einer Abflugtafel: Fenster, Streifen, Achse quer über
+          die Mitte. Läuft einmal durch und rastet ein. Ohne Skript steht sofort der richtige Wert da.</span>
+        <button class="variant-replay" type="button" data-replay="kuer-board">Nochmal abspielen</button>
+      </div>
+      <div class="stage is-dark grain" id="kuer-board">
+        <div class="stage-inner">
+          <div class="v2-board-grid">
+            <div class="v2-board-item">
+              <span class="stat-index">01</span>
+              <span class="board v2-board" data-board>&gt; 2.000</span>
+              <span class="stat-caption">Grundbücher in der Betreuung</span>
+            </div>
+            <div class="v2-board-item">
+              <span class="stat-index">02</span>
+              <span class="board v2-board" data-board>&gt; 90 %</span>
+              <span class="stat-caption">unserer Kunden nutzen unsere digitale Plattform</span>
+            </div>
+            <div class="v2-board-item">
+              <span class="stat-index">03</span>
+              <span class="board v2-board" data-board>≈ 75.000</span>
+              <span class="stat-caption">verwaltete Quadratmeter im Bestand</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="variant">
+      <div class="variant-bar">
+        <span class="variant-tag">K2</span>
+        <span class="variant-name">Ausgestanzt</span>
+        <span class="variant-source">Die Zahl ist kein Text auf dem Bild, sondern das Fenster dahin. Eine
+          aufhellende Mischblende hebt das Foto in einen Bereich, in dem es auf dunklem Grund trägt.</span>
+      </div>
+      <div class="stage is-dark grain">
+        <div class="stage-inner">
+          <div class="cutout-row" style="--cutout-image:url('../assets/img/metrics-dashboard-900.webp')">
+            <p class="cutout">&gt; 2.000</p>
+            <p class="stat-caption">Grundbücher in der Betreuung</p>
+          </div>
+          <div class="cutout-row" style="--cutout-image:url('../assets/img/kunden-community-900.webp')">
+            <p class="cutout">≈ 75.000</p>
+            <p class="stat-caption">verwaltete Quadratmeter im Bestand</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="variant">
+      <div class="variant-bar">
+        <span class="variant-tag">K3</span>
+        <span class="variant-name">Maskenwechsel</span>
+        <span class="variant-source">Die Bildmarke wird zur Blende und wächst auf, bis sie das Bild
+          freigibt. Aus dem Zeichen wird der Rahmen. Danach fällt die Maske ganz weg.</span>
+      </div>
+      <div class="stage">
+        <div class="stage-inner">
+          <div class="reveal-mask" data-mask style="max-width:44rem;margin-inline:auto">
+            <img src="../assets/img/kunden-community-900.webp" width="900" height="1350"
+                 alt="Begrünter Innenhof einer modernen Wohnanlage" loading="lazy" decoding="async">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="variant">
+      <div class="variant-bar">
+        <span class="variant-tag">K4</span>
+        <span class="variant-name">Umlaufband</span>
+        <span class="variant-source">Die acht Merkmale ziehen als endlose Zeile vorbei, getrennt durch die
+          Bildmarke. Beim Überfahren hält das Band an. Rein dekorativ und deshalb für Vorlesewerkzeuge
+          ausgeblendet.</span>
+      </div>
+      <div class="stage">
+        <div class="stage-inner">
+          <div class="ticker" aria-hidden="true">
+            <div class="ticker-run">
+            <span class="ticker-item"><svg class="mark" viewBox="1.02 1.02 2.72 3.12" aria-hidden="true"><path fill="currentColor" d="M1.364,2.557l0.494-0.18v1.541h0.009H2.21V1.329l0.724,0.434v2.155h0.105h0.048h0.059V3.164l0.527,0.377v0.377h0.244V3.232L3.666,3.07V2.294L3.146,1.976V1.655L2.221,1.089V1.083L2.215,1.086L2.21,1.083v0.005L1.712,1.29v0.831l-0.63,0.256v1.541h0.282V2.557z M3.146,2.229l0.356,0.215v0.519L3.146,2.73V2.229z"/></svg>Transparente Abrechnung</span>
+            <span class="ticker-item"><svg class="mark" viewBox="1.02 1.02 2.72 3.12" aria-hidden="true"><path fill="currentColor" d="M1.364,2.557l0.494-0.18v1.541h0.009H2.21V1.329l0.724,0.434v2.155h0.105h0.048h0.059V3.164l0.527,0.377v0.377h0.244V3.232L3.666,3.07V2.294L3.146,1.976V1.655L2.221,1.089V1.083L2.215,1.086L2.21,1.083v0.005L1.712,1.29v0.831l-0.63,0.256v1.541h0.282V2.557z M3.146,2.229l0.356,0.215v0.519L3.146,2.73V2.229z"/></svg>Zuverlässige Instandhaltung</span>
+            <span class="ticker-item"><svg class="mark" viewBox="1.02 1.02 2.72 3.12" aria-hidden="true"><path fill="currentColor" d="M1.364,2.557l0.494-0.18v1.541h0.009H2.21V1.329l0.724,0.434v2.155h0.105h0.048h0.059V3.164l0.527,0.377v0.377h0.244V3.232L3.666,3.07V2.294L3.146,1.976V1.655L2.221,1.089V1.083L2.215,1.086L2.21,1.083v0.005L1.712,1.29v0.831l-0.63,0.256v1.541h0.282V2.557z M3.146,2.229l0.356,0.215v0.519L3.146,2.73V2.229z"/></svg>Effiziente Kommunikation</span>
+            <span class="ticker-item"><svg class="mark" viewBox="1.02 1.02 2.72 3.12" aria-hidden="true"><path fill="currentColor" d="M1.364,2.557l0.494-0.18v1.541h0.009H2.21V1.329l0.724,0.434v2.155h0.105h0.048h0.059V3.164l0.527,0.377v0.377h0.244V3.232L3.666,3.07V2.294L3.146,1.976V1.655L2.221,1.089V1.083L2.215,1.086L2.21,1.083v0.005L1.712,1.29v0.831l-0.63,0.256v1.541h0.282V2.557z M3.146,2.229l0.356,0.215v0.519L3.146,2.73V2.229z"/></svg>Rechtssichere Verwaltung</span>
+            <span class="ticker-item"><svg class="mark" viewBox="1.02 1.02 2.72 3.12" aria-hidden="true"><path fill="currentColor" d="M1.364,2.557l0.494-0.18v1.541h0.009H2.21V1.329l0.724,0.434v2.155h0.105h0.048h0.059V3.164l0.527,0.377v0.377h0.244V3.232L3.666,3.07V2.294L3.146,1.976V1.655L2.221,1.089V1.083L2.215,1.086L2.21,1.083v0.005L1.712,1.29v0.831l-0.63,0.256v1.541h0.282V2.557z M3.146,2.229l0.356,0.215v0.519L3.146,2.73V2.229z"/></svg>Individuelle Betreuung</span>
+            <span class="ticker-item"><svg class="mark" viewBox="1.02 1.02 2.72 3.12" aria-hidden="true"><path fill="currentColor" d="M1.364,2.557l0.494-0.18v1.541h0.009H2.21V1.329l0.724,0.434v2.155h0.105h0.048h0.059V3.164l0.527,0.377v0.377h0.244V3.232L3.666,3.07V2.294L3.146,1.976V1.655L2.221,1.089V1.083L2.215,1.086L2.21,1.083v0.005L1.712,1.29v0.831l-0.63,0.256v1.541h0.282V2.557z M3.146,2.229l0.356,0.215v0.519L3.146,2.73V2.229z"/></svg>Digitale Prozesse</span>
+            <span class="ticker-item"><svg class="mark" viewBox="1.02 1.02 2.72 3.12" aria-hidden="true"><path fill="currentColor" d="M1.364,2.557l0.494-0.18v1.541h0.009H2.21V1.329l0.724,0.434v2.155h0.105h0.048h0.059V3.164l0.527,0.377v0.377h0.244V3.232L3.666,3.07V2.294L3.146,1.976V1.655L2.221,1.089V1.083L2.215,1.086L2.21,1.083v0.005L1.712,1.29v0.831l-0.63,0.256v1.541h0.282V2.557z M3.146,2.229l0.356,0.215v0.519L3.146,2.73V2.229z"/></svg>Digitale Kollegin Vera</span>
+            <span class="ticker-item"><svg class="mark" viewBox="1.02 1.02 2.72 3.12" aria-hidden="true"><path fill="currentColor" d="M1.364,2.557l0.494-0.18v1.541h0.009H2.21V1.329l0.724,0.434v2.155h0.105h0.048h0.059V3.164l0.527,0.377v0.377h0.244V3.232L3.666,3.07V2.294L3.146,1.976V1.655L2.221,1.089V1.083L2.215,1.086L2.21,1.083v0.005L1.712,1.29v0.831l-0.63,0.256v1.541h0.282V2.557z M3.146,2.229l0.356,0.215v0.519L3.146,2.73V2.229z"/></svg>Professionalität</span>
+            </div>
+            <div class="ticker-run">
+            <span class="ticker-item"><svg class="mark" viewBox="1.02 1.02 2.72 3.12" aria-hidden="true"><path fill="currentColor" d="M1.364,2.557l0.494-0.18v1.541h0.009H2.21V1.329l0.724,0.434v2.155h0.105h0.048h0.059V3.164l0.527,0.377v0.377h0.244V3.232L3.666,3.07V2.294L3.146,1.976V1.655L2.221,1.089V1.083L2.215,1.086L2.21,1.083v0.005L1.712,1.29v0.831l-0.63,0.256v1.541h0.282V2.557z M3.146,2.229l0.356,0.215v0.519L3.146,2.73V2.229z"/></svg>Transparente Abrechnung</span>
+            <span class="ticker-item"><svg class="mark" viewBox="1.02 1.02 2.72 3.12" aria-hidden="true"><path fill="currentColor" d="M1.364,2.557l0.494-0.18v1.541h0.009H2.21V1.329l0.724,0.434v2.155h0.105h0.048h0.059V3.164l0.527,0.377v0.377h0.244V3.232L3.666,3.07V2.294L3.146,1.976V1.655L2.221,1.089V1.083L2.215,1.086L2.21,1.083v0.005L1.712,1.29v0.831l-0.63,0.256v1.541h0.282V2.557z M3.146,2.229l0.356,0.215v0.519L3.146,2.73V2.229z"/></svg>Zuverlässige Instandhaltung</span>
+            <span class="ticker-item"><svg class="mark" viewBox="1.02 1.02 2.72 3.12" aria-hidden="true"><path fill="currentColor" d="M1.364,2.557l0.494-0.18v1.541h0.009H2.21V1.329l0.724,0.434v2.155h0.105h0.048h0.059V3.164l0.527,0.377v0.377h0.244V3.232L3.666,3.07V2.294L3.146,1.976V1.655L2.221,1.089V1.083L2.215,1.086L2.21,1.083v0.005L1.712,1.29v0.831l-0.63,0.256v1.541h0.282V2.557z M3.146,2.229l0.356,0.215v0.519L3.146,2.73V2.229z"/></svg>Effiziente Kommunikation</span>
+            <span class="ticker-item"><svg class="mark" viewBox="1.02 1.02 2.72 3.12" aria-hidden="true"><path fill="currentColor" d="M1.364,2.557l0.494-0.18v1.541h0.009H2.21V1.329l0.724,0.434v2.155h0.105h0.048h0.059V3.164l0.527,0.377v0.377h0.244V3.232L3.666,3.07V2.294L3.146,1.976V1.655L2.221,1.089V1.083L2.215,1.086L2.21,1.083v0.005L1.712,1.29v0.831l-0.63,0.256v1.541h0.282V2.557z M3.146,2.229l0.356,0.215v0.519L3.146,2.73V2.229z"/></svg>Rechtssichere Verwaltung</span>
+            <span class="ticker-item"><svg class="mark" viewBox="1.02 1.02 2.72 3.12" aria-hidden="true"><path fill="currentColor" d="M1.364,2.557l0.494-0.18v1.541h0.009H2.21V1.329l0.724,0.434v2.155h0.105h0.048h0.059V3.164l0.527,0.377v0.377h0.244V3.232L3.666,3.07V2.294L3.146,1.976V1.655L2.221,1.089V1.083L2.215,1.086L2.21,1.083v0.005L1.712,1.29v0.831l-0.63,0.256v1.541h0.282V2.557z M3.146,2.229l0.356,0.215v0.519L3.146,2.73V2.229z"/></svg>Individuelle Betreuung</span>
+            <span class="ticker-item"><svg class="mark" viewBox="1.02 1.02 2.72 3.12" aria-hidden="true"><path fill="currentColor" d="M1.364,2.557l0.494-0.18v1.541h0.009H2.21V1.329l0.724,0.434v2.155h0.105h0.048h0.059V3.164l0.527,0.377v0.377h0.244V3.232L3.666,3.07V2.294L3.146,1.976V1.655L2.221,1.089V1.083L2.215,1.086L2.21,1.083v0.005L1.712,1.29v0.831l-0.63,0.256v1.541h0.282V2.557z M3.146,2.229l0.356,0.215v0.519L3.146,2.73V2.229z"/></svg>Digitale Prozesse</span>
+            <span class="ticker-item"><svg class="mark" viewBox="1.02 1.02 2.72 3.12" aria-hidden="true"><path fill="currentColor" d="M1.364,2.557l0.494-0.18v1.541h0.009H2.21V1.329l0.724,0.434v2.155h0.105h0.048h0.059V3.164l0.527,0.377v0.377h0.244V3.232L3.666,3.07V2.294L3.146,1.976V1.655L2.221,1.089V1.083L2.215,1.086L2.21,1.083v0.005L1.712,1.29v0.831l-0.63,0.256v1.541h0.282V2.557z M3.146,2.229l0.356,0.215v0.519L3.146,2.73V2.229z"/></svg>Digitale Kollegin Vera</span>
+            <span class="ticker-item"><svg class="mark" viewBox="1.02 1.02 2.72 3.12" aria-hidden="true"><path fill="currentColor" d="M1.364,2.557l0.494-0.18v1.541h0.009H2.21V1.329l0.724,0.434v2.155h0.105h0.048h0.059V3.164l0.527,0.377v0.377h0.244V3.232L3.666,3.07V2.294L3.146,1.976V1.655L2.221,1.089V1.083L2.215,1.086L2.21,1.083v0.005L1.712,1.29v0.831l-0.63,0.256v1.541h0.282V2.557z M3.146,2.229l0.356,0.215v0.519L3.146,2.73V2.229z"/></svg>Professionalität</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="variant">
+      <div class="variant-bar">
+        <span class="variant-tag">K5</span>
+        <span class="variant-name">Register mit Lauflicht</span>
+        <span class="variant-source">Die überfahrene Zeile wird hell, die übrigen treten zurück, und ein
+          Lichtstreifen läuft die Kante entlang. Der Blick bekommt eine Führung.</span>
+      </div>
+      <div class="stage is-dark grain">
+        <div class="stage-inner">
+          <ul class="rail">
+            <li class="rail-item"><div><span class="svc-num">01</span><div>
+              <h3>Eigentümergemeinschaften</h3>
+              <p>mit mehr als 20 Einheiten<br>im Raum Esslingen, Reutlingen, Göppingen, Ulm.</p>
+            </div></div></li>
+            <li class="rail-item"><div><span class="svc-num">02</span><div>
+              <h3>Aufgeschlossene Menschen</h3>
+              <p>mit Interesse für moderne Technologien und effiziente Prozesse.</p>
+            </div></div></li>
+            <li class="rail-item"><div><span class="svc-num">03</span><div>
+              <h3>Konstruktive Menschen,</h3>
+              <p>welche gemeinschaftliche Ziele unterstützen und für verbindliche Zusammenarbeit bereit sind.</p>
+            </div></div></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="variant">
+      <div class="variant-bar">
+        <span class="variant-tag">K6</span>
+        <span class="variant-name">Leuchtkontakt</span>
+        <span class="variant-source">Ein weicher Schein folgt dem Zeiger über die Fläche. Wo es keinen
+          Zeiger gibt, steht er ruhig in der Ecke. Die Rufnummer wird zum Schlussbild.</span>
+      </div>
+      <div class="stage is-dark">
+        <div class="stage-inner">
+          <div class="spot" data-spot>
+            <p class="eyebrow">Kontakt aufnehmen</p>
+            <h3 class="h2" style="margin-bottom:0;color:#fff">Ihr direkter Draht zu uns</h3>
+            <a class="spot-number" href="tel:+4970222085790">07022 2085790</a>
+            <p class="con-note"><span class="contact-badge">24/7</span> erreichbar — Unser Team unterstützt Sie gerne persönlich.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 </main>
 
 <footer class="section" style="padding-block:var(--s-3)">
@@ -1313,5 +1480,6 @@
 </footer>
 
 <script src="../assets/js/varianten.js" defer></script>
+<script src="../assets/js/kuer.js" defer></script>
 </body>
 </html>

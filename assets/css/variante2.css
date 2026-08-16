@@ -1,0 +1,217 @@
+/* =============================================================================
+   Variante 2 — Kür als vollständige Seite
+   Kopfbereich und Navigation bleiben unverändert. Alles darunter arbeitet
+   mit den Mitteln aus kuer.css: Tiefe, Bewegung entlang des Bildlaufs,
+   die Bildmarke als Blende, Ziffern als mechanische Anzeige.
+
+   Schriften, Farben und Texte sind dieselben wie überall.
+   ========================================================================== */
+
+/* --- Grundstimmung ------------------------------------------------------
+   Die Seite ist dunkel getaktet: dunkel, hell, dunkel, hell, dunkel. Die
+   hellen Abschnitte wirken dadurch wie Atempausen.
+   ------------------------------------------------------------------------ */
+
+.v2-h2 {
+  margin: 0 0 var(--s-3);
+  font-size: clamp(2.2rem, 1rem + 5vw, 4.5rem);
+  color: #fff;
+}
+
+.v2-h2.is-dark {
+  color: var(--ink);
+}
+
+.v2-oversize {
+  margin: 0 0 var(--s-3);
+  color: #fff;
+}
+
+.v2-lead {
+  margin: 0 0 0.4em;
+  font-family: var(--font-heading);
+  font-weight: 400;
+  font-size: clamp(1.2rem, 1rem + 0.9vw, 1.6rem);
+  letter-spacing: -0.02em;
+}
+
+.v2-body {
+  max-width: 48ch;
+  margin: 0 0 var(--s-15);
+  color: color-mix(in srgb, currentColor 68%, transparent);
+}
+
+.v2-closing {
+  max-width: 34ch;
+  margin: var(--s-4) auto 0;
+  font-family: var(--font-heading);
+  font-size: clamp(1.2rem, 0.95rem + 1.1vw, 1.9rem);
+  line-height: 1.25em;
+  letter-spacing: -0.025em;
+  text-align: center;
+  text-wrap: balance;
+}
+
+/* --- Leistungen --------------------------------------------------------- */
+
+.v2-reel {
+  padding-bottom: var(--s-5);
+}
+
+/* --- Kennzahlen --------------------------------------------------------- */
+
+.v2-stats .cutout-row {
+  border-bottom-color: var(--white-a20);
+}
+
+.v2-board-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--gap-sm);
+  margin-top: var(--s-3);
+}
+
+.v2-board-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+  padding-top: var(--s-2);
+  border-top: 1px solid var(--white-a20);
+}
+
+.v2-board {
+  font-size: clamp(1.6rem, 1rem + 2.2vw, 2.8rem);
+}
+
+/* --- etg24 --------------------------------------------------------------
+   Der einzige helle Abschnitt mit Bild: die Bildmarke öffnet sich zur
+   Ansicht des Kundenportals.
+   ------------------------------------------------------------------------ */
+
+.v2-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--gap-lg);
+  align-items: center;
+}
+
+.v2-etg .reveal-mask {
+  background-color: var(--surface);
+}
+
+.v2-duo {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--gap-lg);
+  margin-top: var(--s-5);
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--border-soft);
+}
+
+/* --- Zielgruppen -------------------------------------------------------- */
+
+.v2-audience .oversize {
+  /* Am linken Rand angeschnitten – der Blick läuft in die Zeile hinein. */
+  margin-left: -0.06em;
+}
+
+/* --- Merkmale ----------------------------------------------------------- */
+
+.v2-features {
+  padding-top: 0;
+}
+
+.v2-features .ticker {
+  margin-bottom: var(--s-5);
+  border-top: 0;
+}
+
+/* --- Kontakt ------------------------------------------------------------ */
+
+.v2-contact .spot .eyebrow,
+.v2-contact .spot .con-note {
+  color: #ffffffb3;
+}
+
+/* --- Fußbereich ---------------------------------------------------------
+   Das Wortzeichen schließt die Seite als Bild ab, nicht als Text.
+   ------------------------------------------------------------------------ */
+
+.v2-footer {
+  padding-top: var(--s-4);
+  padding-bottom: var(--s-2);
+  background-color: var(--ink);
+  color: #fff;
+  --bg: var(--ink);
+  --text: #fff;
+  --border-soft: var(--white-a20);
+  --icon-accent: var(--accent-on-dark);
+  --link: #fff;
+  overflow: hidden;
+}
+
+.v2-foot-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) repeat(2, minmax(0, 1fr));
+  gap: var(--gap-md);
+  padding-bottom: var(--s-3);
+}
+
+.v2-wordmark {
+  margin: 0;
+  font-size: clamp(4rem, 1rem + 17vw, 17rem);
+  line-height: 0.82em;
+  letter-spacing: -0.055em;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--white-a20);
+  user-select: none;
+}
+
+/* --- Hinweisleiste ------------------------------------------------------ */
+
+.draft-bar {
+  position: relative;
+  z-index: 100;
+  padding: 0.6rem var(--s-1);
+  background-color: var(--accent);
+  color: #fff;
+  font-size: var(--text-sm);
+  text-align: center;
+}
+
+.draft-bar a {
+  color: #fff;
+  text-underline-offset: 0.2em;
+}
+
+/* ==========================================================================
+   Breakpoints
+   ========================================================================== */
+
+@media (max-width: 991px) {
+  .v2-split,
+  .v2-duo,
+  .v2-board-grid,
+  .v2-foot-top {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .v2-duo {
+    margin-top: var(--s-3);
+    gap: var(--s-3);
+  }
+
+  .v2-h2 {
+    margin-bottom: var(--s-2);
+  }
+}
+
+@media (max-width: 767px) {
+  .v2-closing {
+    margin-top: var(--s-3);
+  }
+
+  .v2-board-item {
+    padding-top: var(--s-15);
+  }
+}

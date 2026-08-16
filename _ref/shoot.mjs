@@ -86,11 +86,6 @@ for (const w of widths) {
   // Scroll-Animationen in den Endzustand zwingen. Beim Durchscrollen lösen
   // sie zwar aus, aber ob jede Beobachtung rechtzeitig greift, ist nicht
   // garantiert – für einen Screenshot zählt nur das Endbild.
-  await evaluate(`(() => {
-    document.querySelectorAll('.chars').forEach(e => e.classList.add('is-running'));
-    document.querySelectorAll('[data-reveal]').forEach(e => e.classList.add('is-revealed'));
-    return 1;
-  })()`);
 
   // Verbleibende Bilder erzwingen: loading="lazy" aufheben, laden und
   // dekodieren lassen. Ohne decode() sind Bilder zwar geladen, aber beim
@@ -105,7 +100,17 @@ for (const w of widths) {
     ]);
     return 1;
   })()`);
-  await sleep(1200);
+  await evaluate(`(() => {
+    document.querySelectorAll('.chars, .board, .kinetic').forEach(e => e.classList.add('is-running'));
+    document.querySelectorAll('[data-reveal]').forEach(e => e.classList.add('is-revealed'));
+    document.querySelectorAll('[data-mask]').forEach(e => {
+      e.style.setProperty('--open', 1); e.classList.add('is-open');
+    });
+    return 1;
+  })()`);
+
+  // Bewegungen ausklingen lassen, sonst wird mitten im Lauf ausgelöst.
+  await sleep(2600);
 
   const info = await evaluate(`JSON.stringify({
     h: document.documentElement.scrollHeight,

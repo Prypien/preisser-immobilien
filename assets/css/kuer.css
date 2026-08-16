@@ -1,0 +1,638 @@
+/* =============================================================================
+   Preißer Immobilien — Kür
+   Die ambitionierte Ebene der Entwürfe. Gleiche Schriften, gleiche Farben,
+   gleiche Texte wie überall — andere Mittel: Tiefe, Bewegung entlang des
+   Bildlaufs, die Bildmarke als Maske, Ziffern als mechanische Anzeige.
+
+   Genutzt von /gestaltungsvarianten (Kür-Entwürfe) und /variante2.
+
+   Aufbau: 1 Grundlagen (Korn, Schleier, Leuchte) · 2 Kinetische Schrift
+           3 Fallblattanzeige · 4 Ausgestanzte Ziffern · 5 Querlauf
+           6 Maskenwechsel · 7 Umlaufband · 8 Register mit Lauflicht
+           9 Leuchtkontakt · 10 Breakpoints
+   ========================================================================== */
+
+/* ==========================================================================
+   1. Grundlagen
+   ========================================================================== */
+
+/* Feines Korn über dunklen Flächen. Nimmt dem Schwarz das Digitale und
+   lässt Verläufe ohne Streifenbildung ausklingen. */
+.grain {
+  position: relative;
+  isolation: isolate;
+}
+
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.5;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.32'/%3E%3C/svg%3E");
+}
+
+.grain > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* Weicher Lichtschein, der einen Abschnitt von einer Ecke her aufhellt. */
+.glow {
+  position: relative;
+  isolation: isolate;
+}
+
+.glow::before {
+  content: "";
+  position: absolute;
+  inset: -20% -10% auto -10%;
+  height: 80%;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(60% 60% at 70% 0%,
+    color-mix(in srgb, var(--accent) 40%, transparent), transparent 70%);
+  filter: blur(40px);
+}
+
+/* Zwei Flächen stoßen nicht hart aneinander, sondern laufen ineinander. */
+.fade-top {
+  --fade: 8rem;
+  mask-image: linear-gradient(to bottom, transparent, #000 var(--fade));
+}
+
+.fade-bottom {
+  --fade: 8rem;
+  mask-image: linear-gradient(to top, transparent, #000 var(--fade));
+}
+
+/* ==========================================================================
+   2. Kinetische Schrift
+   Zeilen steigen hinter einer Kante hervor. Der Kniff ist die Kante: das
+   überlaufende Element schneidet ab, die Zeile selbst wird nur geschoben.
+   ========================================================================== */
+
+.kinetic {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 1.02em;
+  text-wrap: balance;
+}
+
+.kinetic .line {
+  display: block;
+  overflow: hidden;
+}
+
+.kinetic .line > span {
+  display: block;
+  transform: translateY(105%);
+  transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: calc(var(--i, 0) * 110ms);
+}
+
+.js-anim .kinetic.is-running .line > span,
+.kinetic:not(.js-kinetic) .line > span {
+  transform: none;
+}
+
+/* Ohne Skript bleibt der Text sichtbar. */
+html:not(.js-anim) .kinetic .line > span {
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kinetic .line > span {
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* Übergroße Wortmarke, die am Rand angeschnitten wird. */
+.oversize {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-weight: 400;
+  font-size: clamp(3.5rem, 1rem + 13vw, 13rem);
+  line-height: 0.86em;
+  letter-spacing: -0.05em;
+  text-wrap: balance;
+}
+
+/* ==========================================================================
+   3. Fallblattanzeige
+   Ziffern wie auf einer Abflugtafel: ein Fenster, dahinter ein Streifen,
+   davor eine Achse quer über die Mitte.
+   ========================================================================== */
+
+.board {
+  display: inline-flex;
+  align-items: stretch;
+  gap: 0.18em;
+  font-family: var(--font-heading);
+  font-variant-numeric: lining-nums tabular-nums;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.board-cell {
+  position: relative;
+  display: inline-block;
+  height: 1.25em;
+  padding: 0 0.14em;
+  border-radius: 0.1em;
+  background: linear-gradient(180deg,
+    color-mix(in srgb, currentColor 14%, transparent) 0%,
+    color-mix(in srgb, currentColor 6%, transparent) 49%,
+    color-mix(in srgb, currentColor 16%, transparent) 51%,
+    color-mix(in srgb, currentColor 7%, transparent) 100%);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 12%, transparent);
+  overflow: hidden;
+}
+
+/* Die Achse, um die sich die Blätter drehen würden. */
+.board-cell::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left: 0;
+  height: 1px;
+  z-index: 2;
+  background-color: color-mix(in srgb, var(--ink) 55%, transparent);
+  pointer-events: none;
+}
+
+/* Ruhezustand ist die Zielziffer, nicht die Null. Fällt das Skript aus oder
+   löst die Beobachtung nicht aus, steht trotzdem der richtige Wert da. */
+.board-strip {
+  display: block;
+  padding-top: 0.125em;
+  transform: translateY(calc(var(--stop) * -1em));
+}
+
+/* Erst wenn das Skript läuft, wird zurück auf Anfang gestellt … */
+.js-anim .board:not(.is-running) .board-strip {
+  transform: translateY(0);
+}
+
+/* … und von dort auf die Zielziffer gefahren. */
+.js-anim .board-strip {
+  transition: transform 1.9s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: calc(var(--i) * 110ms);
+}
+
+.board-face {
+  display: block;
+  height: 1em;
+}
+
+/* Zeichen ohne Walze: Vorzeichen, Prozent, Währung. */
+.board-fixed {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 0.06em;
+  color: color-mix(in srgb, currentColor 60%, transparent);
+}
+
+/* ==========================================================================
+   4. Ausgestanzte Ziffern
+   Die Zahl ist kein Text auf einem Bild, sondern das Fenster zum Bild.
+   ========================================================================== */
+
+.cutout {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-weight: 400;
+  font-size: clamp(4rem, 1rem + 14vw, 12rem);
+  line-height: 0.9em;
+  letter-spacing: -0.05em;
+  font-variant-numeric: lining-nums tabular-nums;
+  color: currentColor;
+}
+
+@supports (background-clip: text) or (-webkit-background-clip: text) {
+  .cutout {
+    background-image: var(--cutout-image);
+    background-size: cover;
+    background-position: center;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    /* Das Foto allein ist zu dunkel, um auf dunklem Grund als Füllung zu
+       tragen. Eine aufhellende Mischblende hebt es in einen sichtbaren
+       Bereich, ohne die Struktur des Bildes zu verlieren. */
+    background-color: var(--cutout-lift, color-mix(in srgb, var(--accent-on-dark) 62%, transparent));
+    background-blend-mode: screen;
+    /* Kontur, damit die Ziffernform auch über flauen Bildstellen steht. */
+    -webkit-text-stroke: 1.5px color-mix(in srgb, currentColor 28%, transparent);
+  }
+}
+
+.cutout-row {
+  display: grid;
+  grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+  gap: var(--gap-sm);
+  align-items: end;
+  padding: var(--s-3) 0;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.cutout-row .stat-caption {
+  max-width: 24ch;
+  padding-bottom: 0.6em;
+  font-size: var(--text-lg);
+}
+
+/* ==========================================================================
+   5. Querlauf
+   Senkrechtes Scrollen schiebt einen Filmstreifen waagerecht. Der Rahmen
+   bleibt stehen, der Streifen wandert.
+   ========================================================================== */
+
+.reel {
+  position: relative;
+}
+
+.reel-viewport {
+  position: sticky;
+  top: 0;
+  height: 100dvh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.reel-track {
+  display: flex;
+  gap: var(--gap-sm);
+  padding-inline: var(--s-3);
+  will-change: transform;
+  transform: translate3d(calc(var(--shift, 0) * -1px), 0, 0);
+}
+
+.reel-card {
+  position: relative;
+  flex: none;
+  width: min(38rem, 78vw);
+  border-radius: calc(var(--radius-card) * 1.4);
+  overflow: hidden;
+  background-color: var(--ink);
+}
+
+.reel-card img {
+  width: 100%;
+  height: clamp(20rem, 56vh, 34rem);
+  object-fit: cover;
+  transition: transform 1.2s var(--ease-out);
+}
+
+.reel-card:hover img {
+  transform: scale(1.03);
+}
+
+.reel-body {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: var(--s-3) var(--s-25, 2.5rem);
+  background: linear-gradient(to top, #0b0b0cf2 15%, #0b0b0c00);
+  color: #fff;
+}
+
+.reel-body h3 {
+  margin: 0 0 0.3em;
+  font-size: clamp(1.4rem, 1.05rem + 1.2vw, 2rem);
+  letter-spacing: -0.025em;
+}
+
+.reel-body p {
+  max-width: 42ch;
+  margin: 0;
+  font-size: var(--text-sm);
+  color: #ffffffb3;
+}
+
+.reel-num {
+  display: block;
+  margin-bottom: 0.6em;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  color: #ffffff80;
+}
+
+/* Fortschrittsbalken am unteren Rand des Rahmens. */
+.reel-progress {
+  position: absolute;
+  right: var(--s-3);
+  bottom: var(--s-3);
+  left: var(--s-3);
+  height: 1px;
+  background-color: color-mix(in srgb, currentColor 18%, transparent);
+}
+
+.reel-progress::after {
+  content: "";
+  display: block;
+  height: 100%;
+  width: calc(var(--progress, 0) * 100%);
+  background-color: currentColor;
+}
+
+/* ==========================================================================
+   6. Maskenwechsel
+   Die Bildmarke wird zur Blende: sie wächst beim Scrollen auf und gibt das
+   Bild frei. Aus dem Zeichen wird der Rahmen.
+   ========================================================================== */
+
+.reveal-mask {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  border-radius: calc(var(--radius-card) * 1.4);
+  overflow: hidden;
+}
+
+.reveal-mask img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Nur solange das Skript die Blende steuert, wird überhaupt maskiert.
+   Ruhezustand ist das ganze Bild. */
+.js-anim .reveal-mask:not(.is-open) img {
+  mask-image: url("../img/mark-preisser.svg");
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: calc(16% + var(--open, 0) * 320%) auto;
+  transition: mask-size 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js-anim .reveal-mask:not(.is-open) img {
+    mask-image: none;
+    transition: none;
+  }
+}
+
+/* ==========================================================================
+   7. Umlaufband
+   Eine endlose Zeile, die die acht Merkmale vorbeiträgt. Die Bildmarke
+   trennt die Einträge.
+   ========================================================================== */
+
+.ticker {
+  display: flex;
+  gap: 0;
+  overflow: hidden;
+  padding: var(--s-15) 0;
+  border-top: 1px solid var(--border-soft);
+  border-bottom: 1px solid var(--border-soft);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.ticker-run {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 2.5rem;
+  padding-right: 2.5rem;
+  animation: ticker-move 46s linear infinite;
+}
+
+.ticker:hover .ticker-run {
+  animation-play-state: paused;
+}
+
+@keyframes ticker-move {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-100%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticker-run { animation: none; }
+  .ticker { mask-image: none; overflow-x: auto; }
+}
+
+.ticker-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.9rem;
+  flex: none;
+  font-family: var(--font-heading);
+  font-size: clamp(1.1rem, 0.9rem + 0.7vw, 1.6rem);
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+.ticker-item .mark {
+  width: 0.8em;
+  height: 0.8em;
+  color: var(--icon-accent);
+}
+
+/* ==========================================================================
+   8. Register mit Lauflicht
+   Die Zielgruppen als große Zeilen. Die überfahrene Zeile wird hell, die
+   übrigen treten zurück — der Blick bekommt eine Führung.
+   ========================================================================== */
+
+.rail {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--border-soft);
+}
+
+.rail-item {
+  position: relative;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.rail-item > div {
+  display: grid;
+  grid-template-columns: 5rem minmax(0, 1fr);
+  gap: var(--gap-sm);
+  align-items: baseline;
+  padding: var(--s-25, 2.5rem) 0;
+  transition: opacity 0.45s var(--ease-out), transform 0.45s var(--ease-out);
+}
+
+.rail:hover .rail-item > div {
+  opacity: 0.35;
+}
+
+.rail .rail-item:hover > div {
+  opacity: 1;
+  transform: translateX(0.75rem);
+}
+
+/* Ein Lichtstreifen läuft beim Überfahren die Kante entlang. */
+.rail-item::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 1px;
+  background: linear-gradient(90deg, var(--icon-accent), transparent 60%);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.6s var(--ease-out);
+}
+
+.rail-item:hover::after {
+  transform: scaleX(1);
+}
+
+.rail-item h3 {
+  margin: 0 0 0.25em;
+  font-family: var(--font-heading);
+  font-weight: 400;
+  font-size: clamp(1.6rem, 1rem + 2.4vw, 3rem);
+  line-height: 1.06em;
+  letter-spacing: -0.032em;
+}
+
+.rail-item p {
+  max-width: 48ch;
+  margin: 0;
+  color: color-mix(in srgb, currentColor 62%, transparent);
+}
+
+/* ==========================================================================
+   9. Leuchtkontakt
+   Auf dunklem Grund folgt ein weicher Schein dem Zeiger. Ohne Zeiger — auf
+   Telefonen — steht er ruhig in der Ecke.
+   ========================================================================== */
+
+.spot {
+  position: relative;
+  isolation: isolate;
+  padding: clamp(3rem, 8vw, 7rem) clamp(1.5rem, 5vw, 5rem);
+  border-radius: calc(var(--radius-card) * 1.8);
+  background-color: var(--ink);
+  color: #fff;
+  overflow: hidden;
+}
+
+.spot::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(28rem 28rem at var(--mx, 78%) var(--my, 22%),
+    color-mix(in srgb, var(--accent) 55%, transparent), transparent 68%);
+  transition: background 0.25s linear;
+}
+
+.spot > * {
+  position: relative;
+  z-index: 1;
+}
+
+.spot-number {
+  display: inline-block;
+  margin: 0.25em 0 0.35em;
+  font-family: var(--font-heading);
+  font-weight: 400;
+  font-size: clamp(2.4rem, 1rem + 6.5vw, 6rem);
+  line-height: 1;
+  letter-spacing: -0.045em;
+  font-variant-numeric: lining-nums tabular-nums;
+  color: inherit;
+  text-decoration: none;
+}
+
+.spot-number:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.1em;
+  text-decoration-thickness: 2px;
+}
+
+.spot-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--gap-sm);
+  margin-top: clamp(2rem, 5vw, 3.5rem);
+  padding-top: var(--s-2);
+  border-top: 1px solid #ffffff26;
+}
+
+.spot-grid .con-label {
+  color: #ffffff80;
+}
+
+.spot-grid p {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: #ffffffb3;
+}
+
+/* ==========================================================================
+   10. Breakpoints
+   ========================================================================== */
+
+@media (max-width: 991px) {
+  .cutout-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-05);
+    align-items: start;
+  }
+
+  .cutout-row .stat-caption {
+    padding-bottom: 0;
+  }
+
+  .reel-viewport {
+    height: auto;
+    position: static;
+    overflow: visible;
+  }
+
+  /* Ohne den langen Bildlauf wird der Streifen zur Spalte. */
+  .reel-track {
+    flex-direction: column;
+    padding-inline: 0;
+    transform: none;
+  }
+
+  .reel-card {
+    width: 100%;
+  }
+
+  .reel-progress {
+    display: none;
+  }
+
+  .rail-item > div {
+    grid-template-columns: 3rem minmax(0, 1fr);
+    padding: var(--s-2) 0;
+  }
+
+  .rail:hover .rail-item > div {
+    opacity: 1;
+  }
+
+  .spot-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-15);
+  }
+}
+
+@media (max-width: 767px) {
+  .rail-item > div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-05);
+  }
+
+  .glow::before {
+    filter: blur(28px);
+  }
+}
