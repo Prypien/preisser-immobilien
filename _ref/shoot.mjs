@@ -83,6 +83,15 @@ for (const w of widths) {
     return 1;
   })()`);
 
+  // Scroll-Animationen in den Endzustand zwingen. Beim Durchscrollen lösen
+  // sie zwar aus, aber ob jede Beobachtung rechtzeitig greift, ist nicht
+  // garantiert – für einen Screenshot zählt nur das Endbild.
+  await evaluate(`(() => {
+    document.querySelectorAll('.chars').forEach(e => e.classList.add('is-running'));
+    document.querySelectorAll('[data-reveal]').forEach(e => e.classList.add('is-revealed'));
+    return 1;
+  })()`);
+
   // Verbleibende Bilder erzwingen: loading="lazy" aufheben und abwarten.
   await evaluate(`(async () => {
     document.querySelectorAll('img[loading="lazy"]').forEach(i => { i.loading = 'eager'; });
