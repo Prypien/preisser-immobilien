@@ -1,0 +1,1646 @@
+/* =============================================================================
+   Preißer Immobilien — Bausteine
+   Die Bauformen aus den Gestaltungsvarianten. Genutzt von /gestaltungsvarianten
+   (zum Vergleich nebeneinander) und von /variante1 (als fertige Seite).
+   Alle Maße, Farben und Schriften stammen aus styles.css.
+
+   Aufbau: 1 Zeichenweise Bewegung · 2 Bildmarke · 3 Kennzahlen · 4 Leistungen
+           5 etg24 · 6 Zielgruppen · 7 Merkmale · 8 Kontakt · 9 Fußbereich
+           10 Breakpoints
+   ========================================================================== */
+
+/* ==========================================================================
+   2. Zeichenweise Bewegung
+   Jedes Zeichen ist ein eigenes Inline-Element mit eigener Verzögerung.
+   ========================================================================== */
+
+.chars {
+  display: inline-block;
+  perspective: 800px;
+  /* Jedes Zeichen ist ein eigenes Inline-Element — ohne diese Sperre bräche
+     der Browser eine Zahl mitten im Wert um („320 Mio“ / „€“). */
+  white-space: nowrap;
+}
+
+.chars .char {
+  display: inline-block;
+  transform-origin: 50% 50%;
+  will-change: transform, opacity;
+}
+
+/* Der verborgene Ausgangszustand gilt nur, wenn das Skript läuft und die
+   Klasse js-anim gesetzt hat. Ohne JavaScript – oder wenn beim Laden etwas
+   schiefgeht – steht der Text ganz normal da. */
+
+/* Variante 1 — Vierteldrehung um die Hochachse. Ruhig und lesbar. */
+.js-anim .chars.anim-flip .char {
+  opacity: 0;
+  transform: rotateY(-90deg);
+  transition: transform 0.55s var(--ease-out), opacity 0.35s linear;
+  transition-delay: calc(var(--i) * 45ms);
+}
+
+/* Variante 2 — Zeichen steigen aus der Grundlinie auf, wie ein Zählwerk. */
+.js-anim .chars.anim-rise .char {
+  opacity: 0;
+  transform: translateY(0.55em) rotateX(-70deg);
+  transition: transform 0.5s var(--ease-out), opacity 0.3s linear;
+  transition-delay: calc(var(--i) * 35ms);
+}
+
+/* Variante 3 — volle Doppeldrehung, die Anmutung des bisherigen Auftritts,
+   aber Zeichen für Zeichen statt für den ganzen Block. */
+.js-anim .chars.anim-spin .char {
+  opacity: 0;
+  transform: rotateY(-720deg);
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s linear;
+  transition-delay: calc(var(--i) * 60ms);
+}
+
+.js-anim .chars.is-running .char {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chars .char {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* --- Zählwerk -----------------------------------------------------------
+   Jede Ziffer ist ein Fenster von genau einer Zeilenhöhe, dahinter läuft
+   ein Streifen mit 0–9. Nur der Streifen bewegt sich.
+   ------------------------------------------------------------------------ */
+
+.roll {
+  display: inline-flex;
+  align-items: baseline;
+  line-height: 1;
+  white-space: nowrap;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+.roll-col {
+  display: inline-block;
+  height: 1em;
+  overflow: hidden;
+  vertical-align: baseline;
+}
+
+.roll-strip {
+  display: block;
+  transform: translateY(0);
+}
+
+.js-anim .roll-strip {
+  /* Ohne Bewegung steht die erste Null im Fenster; erst der Lauf bringt
+     die Zielziffer nach oben. */
+  transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: calc(var(--i) * 70ms);
+}
+
+.js-anim .roll.is-running .roll-strip {
+  transform: translateY(calc(var(--stop) * -1em));
+}
+
+.roll-cell {
+  display: block;
+  height: 1em;
+}
+
+.roll-fixed {
+  display: inline-block;
+}
+
+/* ==========================================================================
+   3. Bildmarke als Gestaltungsmittel
+   ========================================================================== */
+
+.mark {
+  display: block;
+  width: 1em;
+  height: 1em;
+  color: currentColor;
+}
+
+/* Als stiller Wasserzeichen-Stempel in der Ecke einer Fläche. Der Stempel
+   ragt bewusst über den Rand hinaus und wird dort abgeschnitten – deshalb
+   muss die Fläche selbst beschneiden. */
+.has-watermark {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.has-watermark::after {
+  content: "";
+  position: absolute;
+  right: -0.6rem;
+  bottom: -1.2rem;
+  z-index: -1;
+  width: 9rem;
+  height: 9rem;
+  background-color: currentColor;
+  opacity: 0.06;
+  mask: url("../img/mark-preisser.svg") no-repeat center / contain;
+}
+
+/* Als feines, sich wiederholendes Muster auf dunklem Grund. */
+.has-mark-pattern {
+  position: relative;
+  isolation: isolate;
+}
+
+.has-mark-pattern::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-color: currentColor;
+  /* Bewusst an der Wahrnehmungsschwelle: als Textur spürbar, als Motiv
+     nicht aufdringlich. */
+  opacity: 0.022;
+  mask: url("../img/mark-preisser.svg") repeat top left / 7rem 7rem;
+}
+
+.mark-showcase {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--gap-xs);
+}
+
+.mark-demo {
+  padding: var(--s-2);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-card);
+  background-color: var(--card-bg);
+}
+
+.mark-demo h3 {
+  margin: 0 0 0.4em;
+  font-size: 1.05rem;
+}
+
+.mark-demo p {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: color-mix(in srgb, currentColor 70%, transparent);
+}
+
+.mark-rule {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin-bottom: var(--s-125);
+  color: var(--icon-accent);
+}
+
+.mark-rule::before,
+.mark-rule::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background-color: currentColor;
+  opacity: 0.3;
+}
+
+.mark-rule .mark {
+  width: 1.4rem;
+  height: 1.4rem;
+}
+
+/* ==========================================================================
+   4. Kennzahlen
+   ========================================================================== */
+
+/* --- A: Registerzeile ---------------------------------------------------
+   Keine Kästen. Eine durchgehende Zeile, die nur durch Haarlinien geteilt
+   wird; die Zahl trägt den Blick, die Bezeichnung bleibt Bildunterschrift.
+   ------------------------------------------------------------------------ */
+
+.stat-register {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-top: 1px solid var(--border-soft);
+}
+
+.stat-register > * {
+  padding: var(--s-3) var(--s-15) var(--s-2);
+  border-bottom: 1px solid var(--border-soft);
+  border-right: 1px solid var(--border-soft);
+}
+
+.stat-register > *:first-child {
+  padding-left: 0;
+}
+
+.stat-register > *:last-child {
+  border-right: 0;
+  padding-right: 0;
+}
+
+.stat-index {
+  display: block;
+  margin-bottom: var(--s-2);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  color: color-mix(in srgb, currentColor 45%, transparent);
+}
+
+.stat-figure {
+  display: block;
+  margin: 0 0 0.35em;
+  font-family: var(--font-heading);
+  font-size: clamp(2.2rem, 1.2rem + 2.6vw, 3.4rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+.stat-caption {
+  display: block;
+  margin: 0;
+  max-width: 20ch;
+  font-size: var(--text-sm);
+  line-height: 1.5em;
+  color: color-mix(in srgb, currentColor 62%, transparent);
+}
+
+/* --- B: Stapel mit Registermarke ---------------------------------------
+   Karten mit oberer Haarlinie statt vollem Rahmen, dazu die Bildmarke als
+   stiller Stempel. Die Linie wandert beim Überfahren durch.
+   ------------------------------------------------------------------------ */
+
+.stat-slabs {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--gap-xs);
+}
+
+.stat-slab {
+  position: relative;
+  padding: var(--s-3) var(--s-2) var(--s-25, 2.5rem);
+  border-radius: var(--radius-card);
+  background-color: color-mix(in srgb, currentColor 4%, transparent);
+  overflow: hidden;
+}
+
+.stat-slab::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--icon-accent), transparent);
+  transform: scaleX(0.18);
+  transform-origin: left;
+  transition: transform 0.6s var(--ease-out);
+}
+
+.stat-slab:hover::before {
+  transform: scaleX(1);
+}
+
+.stat-slab .stat-figure {
+  font-size: clamp(2rem, 1.1rem + 2.4vw, 3rem);
+}
+
+/* --- C: Band über dem Bild ---------------------------------------------
+   Weiterentwicklung der bisherigen Überlagerung: Das Foto bleibt ganz
+   sichtbar, die Zahlen liegen in einem einzigen Milchglasband darüber.
+   ------------------------------------------------------------------------ */
+
+.stat-band-wrap {
+  position: relative;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+}
+
+.stat-band-wrap img {
+  width: 100%;
+  height: clamp(20rem, 34vw, 30rem);
+  object-fit: cover;
+}
+
+.stat-band {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  background-color: color-mix(in srgb, #1e1e1f 55%, transparent);
+  backdrop-filter: blur(22px);
+  color: #fff;
+}
+
+.stat-band > * {
+  padding: var(--s-2) var(--s-15);
+  border-right: 1px solid #ffffff1f;
+}
+
+.stat-band > *:last-child {
+  border-right: 0;
+}
+
+.stat-band .stat-figure {
+  font-size: clamp(1.6rem, 1rem + 1.6vw, 2.2rem);
+}
+
+.stat-band .stat-caption {
+  color: #ffffff99;
+}
+
+/* --- E: Großformat gestapelt -------------------------------------------
+   Jede Kennzahl bekommt eine eigene Zeile über die volle Breite. Die Zahl
+   wird so groß wie eine Überschrift und trägt den Abschnitt allein.
+   ------------------------------------------------------------------------ */
+
+.stat-stack {
+  border-top: 1px solid var(--border-soft);
+}
+
+.stat-line {
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--gap-sm);
+  align-items: baseline;
+  padding: var(--s-25, 2.5rem) 0;
+  border-bottom: 1px solid var(--border-soft);
+  transition: padding-left 0.4s var(--ease-out);
+}
+
+.stat-line:hover {
+  padding-left: var(--s-1);
+}
+
+.stat-line .stat-figure {
+  margin: 0;
+  font-size: clamp(2.6rem, 1.4rem + 4vw, 5rem);
+  letter-spacing: -0.04em;
+}
+
+.stat-line .stat-caption {
+  max-width: 26ch;
+  font-size: var(--text-lg);
+  line-height: 1.5em;
+}
+
+/* ==========================================================================
+   5. Leistungen
+   ========================================================================== */
+
+/* --- C: Haftender Stapel ------------------------------------------------
+   Die Karten schieben sich beim Scrollen übereinander und bleiben kurz
+   stehen. Braucht kein Skript — position: sticky mit gestaffeltem Abstand.
+   ------------------------------------------------------------------------ */
+
+.svc-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.svc-sticky {
+  position: sticky;
+  top: var(--s-4);
+}
+
+.svc-sticky:nth-child(2) { top: calc(var(--s-4) + 1.5rem); }
+.svc-sticky:nth-child(3) { top: calc(var(--s-4) + 3rem); }
+
+.svc-stack-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--gap-sm);
+  align-items: center;
+  padding: var(--s-3);
+  border: 1px solid var(--card-border);
+  border-radius: calc(var(--radius-card) * 1.3);
+  background-color: var(--bg);
+}
+
+.svc-stack-card h3 {
+  margin: 0 0 0.4em;
+  font-size: clamp(1.4rem, 1.05rem + 1.2vw, 2rem);
+  letter-spacing: -0.02em;
+}
+
+.svc-stack-card p {
+  margin: 0;
+  max-width: 44ch;
+  color: color-mix(in srgb, currentColor 70%, transparent);
+}
+
+.svc-stack-card .frame {
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+}
+
+.svc-stack-card .frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* --- A: Redaktionelle Reihen -------------------------------------------
+   Statt dreier schräger Karten: breite Zeilen im Wechsel, Bild und Text
+   nebeneinander. Ruhiger, lässt den Bildern Raum.
+   ------------------------------------------------------------------------ */
+
+.svc-rows {
+  border-top: 1px solid var(--border-soft);
+}
+
+.svc-row {
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--gap-sm);
+  align-items: center;
+  padding: var(--s-3) 0;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+/* Jede zweite Reihe spiegelt Bild und Text. Über die Spaltennummer statt
+   über „order“ — sonst rutscht das Bild in die schmale Nummernspalte. */
+.svc-row:nth-child(even) .svc-media {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.svc-row:nth-child(even) > div:not(.svc-media) {
+  grid-column: 3;
+  grid-row: 1;
+}
+
+.svc-num {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  color: color-mix(in srgb, currentColor 45%, transparent);
+}
+
+.svc-row h3 {
+  margin: 0 0 0.4em;
+  font-size: clamp(1.3rem, 1rem + 1vw, 1.8rem);
+  letter-spacing: -0.018em;
+}
+
+.svc-row p {
+  margin: 0;
+  max-width: 46ch;
+  color: color-mix(in srgb, currentColor 70%, transparent);
+}
+
+.svc-media {
+  aspect-ratio: 16 / 10;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+}
+
+.svc-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s var(--ease-out);
+}
+
+.svc-row:hover .svc-media img {
+  transform: scale(1.04);
+}
+
+/* --- B: Aufklappende Spalten -------------------------------------------
+   Drei Bildspalten nebeneinander; die überfahrene Spalte öffnet sich und
+   gibt den Text frei. Auf Tastatur reagiert sie über :focus-within.
+   ------------------------------------------------------------------------ */
+
+.svc-panels {
+  display: flex;
+  gap: var(--gap-xs);
+  height: 30rem;
+}
+
+.svc-panel {
+  position: relative;
+  flex: 1;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  cursor: pointer;
+  transition: flex 0.6s var(--ease-out);
+}
+
+.svc-panel:hover,
+.svc-panel:focus-within {
+  flex: 2.4;
+}
+
+.svc-panel img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.svc-panel-body {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: var(--s-2);
+  background: linear-gradient(to top, #0b0b0ce6 20%, #0b0b0c00);
+  color: #fff;
+}
+
+.svc-panel-body h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  letter-spacing: -0.015em;
+}
+
+.svc-panel-body p {
+  max-width: 40ch;
+  margin: 0.5em 0 0;
+  font-size: var(--text-sm);
+  color: #ffffffb3;
+  opacity: 0;
+  transform: translateY(0.4rem);
+  transition: opacity 0.4s var(--ease-out), transform 0.4s var(--ease-out);
+}
+
+.svc-panel:hover .svc-panel-body p,
+.svc-panel:focus-within .svc-panel-body p {
+  opacity: 1;
+  transform: none;
+}
+
+.svc-closing {
+  margin: var(--s-3) 0 0;
+  text-align: center;
+  font-family: var(--font-heading);
+  font-size: clamp(1.1rem, 0.9rem + 0.7vw, 1.5rem);
+  letter-spacing: -0.015em;
+}
+
+/* ==========================================================================
+   6. etg24
+   ========================================================================== */
+
+/* --- A: Gerätebühne ----------------------------------------------------
+   Ein zusammenhängender Block: links die Aussage, rechts das Produkt vor
+   einem weichen Farbschein. Statt dreier ungleicher Kästen.
+   ------------------------------------------------------------------------ */
+
+.etg-stage {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: var(--gap-md);
+  align-items: center;
+  padding: var(--s-4);
+  border-radius: calc(var(--radius-card) * 1.6);
+  background:
+    radial-gradient(120% 90% at 85% 10%, color-mix(in srgb, var(--accent) 26%, transparent), transparent 60%),
+    var(--ink);
+  color: #fff;
+}
+
+.etg-stage h3 {
+  margin: 0 0 0.4em;
+  font-size: clamp(1.6rem, 1.1rem + 1.6vw, 2.4rem);
+  letter-spacing: -0.022em;
+}
+
+.etg-stage > div > p {
+  max-width: 42ch;
+  color: #ffffffb3;
+}
+
+.etg-points {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-05);
+  margin: var(--s-15) 0;
+  padding: 0;
+  list-style: none;
+}
+
+.etg-points li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.45em 0.9em;
+  border: 1px solid #ffffff26;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-sm);
+}
+
+.etg-points .icon {
+  width: 1rem;
+  height: 1rem;
+  color: var(--accent-on-dark);
+}
+
+.etg-device {
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  box-shadow: 0 30px 60px -20px #00000080;
+}
+
+.etg-device img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* --- B: Reiter ----------------------------------------------------------
+   Die drei Aussagen teilen sich eine Fläche und werden über Reiter
+   gewechselt. Spart Höhe und macht den Vergleich leichter.
+   ------------------------------------------------------------------------ */
+
+.etg-tabs {
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  background-color: var(--card-bg);
+}
+
+.etg-tablist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  border-bottom: 1px solid var(--card-border);
+}
+
+.etg-tab {
+  flex: 1 1 12rem;
+  padding: var(--s-15) var(--s-15);
+  border: 0;
+  border-right: 1px solid var(--card-border);
+  background: none;
+  color: inherit;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.25s;
+}
+
+.etg-tab:last-child {
+  border-right: 0;
+}
+
+.etg-tab[aria-selected="true"] {
+  background-color: color-mix(in srgb, var(--accent-link) 8%, transparent);
+  box-shadow: inset 0 -2px 0 var(--icon-accent);
+}
+
+.etg-tabnum {
+  display: block;
+  margin-bottom: 0.4em;
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  color: color-mix(in srgb, currentColor 45%, transparent);
+}
+
+.etg-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--gap-sm);
+  align-items: center;
+  padding: var(--s-3);
+}
+
+.etg-panel[hidden] {
+  display: none;
+}
+
+.etg-panel h3 {
+  margin: 0 0 0.4em;
+  font-size: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+.etg-panel p {
+  margin: 0;
+  max-width: 46ch;
+  color: color-mix(in srgb, currentColor 72%, transparent);
+}
+
+.etg-panel .frame {
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+}
+
+.etg-panel .frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* --- C: Bento-Raster ----------------------------------------------------
+   Unterschiedlich große Zellen in einem festen Raster. Die wichtigste
+   Aussage bekommt die größte Fläche — verbreitet auf Produktseiten, weil
+   es Rangfolge zeigt, ohne etwas wegzulassen.
+   ------------------------------------------------------------------------ */
+
+.bento {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: minmax(11rem, auto);
+  gap: var(--gap-xs);
+}
+
+.bento-cell {
+  display: flex;
+  flex-direction: column;
+  padding: var(--s-2);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-card);
+  background-color: var(--card-bg);
+  overflow: hidden;
+  transition: border-color 0.3s var(--ease-out), transform 0.3s var(--ease-out);
+}
+
+.bento-cell:hover {
+  border-color: var(--card-border-hover);
+  transform: translateY(-2px);
+}
+
+.bento-cell h3 {
+  margin: 0 0 0.4em;
+  font-size: 1.15rem;
+  letter-spacing: -0.015em;
+}
+
+.bento-cell p {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: color-mix(in srgb, currentColor 70%, transparent);
+}
+
+.bento-cell.is-wide { grid-column: span 2; }
+.bento-cell.is-tall { grid-row: span 2; }
+
+.bento-cell.is-lead h3 {
+  font-size: clamp(1.4rem, 1.05rem + 1.2vw, 2rem);
+}
+
+.bento-cell.is-lead p {
+  font-size: var(--text-size);
+  max-width: 44ch;
+}
+
+/* Bildschirmfotos sind fast weiß und verschwinden sonst auf der hellen
+   Karte. Eine getönte Fläche mit feiner Innenkante rahmt sie als Bildschirm. */
+.bento-media {
+  flex: 1;
+  min-height: 8rem;
+  margin-top: var(--s-15);
+  border-radius: var(--radius-md);
+  background-color: color-mix(in srgb, currentColor 6%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 12%, transparent);
+  overflow: hidden;
+}
+
+.bento-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+
+.bento-cell.is-accent {
+  border-color: transparent;
+  background:
+    radial-gradient(120% 100% at 100% 0%, color-mix(in srgb, var(--accent) 45%, transparent), transparent 65%),
+    var(--ink);
+  color: #fff;
+}
+
+.bento-cell.is-accent p {
+  color: #ffffffb3;
+}
+
+/* ==========================================================================
+   7. Zielgruppen
+   ========================================================================== */
+
+/* --- C: Ausklappliste ---------------------------------------------------
+   Alle vier Aussagen auf einen Blick, der Text erscheint auf Klick. Macht
+   den Abschnitt kurz und lässt trotzdem nichts weg. Nutzt <details>, ist
+   also auch ohne Skript bedienbar.
+   ------------------------------------------------------------------------ */
+
+.aud-accordion {
+  border-top: 1px solid var(--border-soft);
+}
+
+.aud-fold {
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.aud-fold summary {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-15);
+  padding: var(--s-2) 0;
+  cursor: pointer;
+  list-style: none;
+  transition: padding-left 0.3s var(--ease-out);
+}
+
+.aud-fold summary::-webkit-details-marker {
+  display: none;
+}
+
+.aud-fold summary:hover {
+  padding-left: var(--s-05);
+}
+
+.aud-fold summary h3 {
+  flex: 1;
+  /* Ohne min-width: 0 darf ein Flex-Kind nicht unter seine Mindestbreite
+     schrumpfen und schiebt auf schmalen Geräten über den Rand. */
+  min-width: 0;
+  margin: 0;
+  font-size: clamp(1.25rem, 1rem + 1.1vw, 1.9rem);
+  letter-spacing: -0.02em;
+  line-height: 1.15em;
+  overflow-wrap: break-word;
+}
+
+.aud-fold-sign {
+  flex: none;
+  width: 1.5rem;
+  height: 1.5rem;
+  position: relative;
+  align-self: center;
+  color: var(--icon-accent);
+}
+
+.aud-fold-sign::before,
+.aud-fold-sign::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0.9rem;
+  height: 1.5px;
+  background-color: currentColor;
+  transform: translate(-50%, -50%);
+  transition: transform 0.3s var(--ease-out), opacity 0.3s;
+}
+
+.aud-fold-sign::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.aud-fold[open] .aud-fold-sign::after {
+  transform: translate(-50%, -50%) rotate(0deg);
+  opacity: 0;
+}
+
+.aud-fold-body {
+  padding: 0 0 var(--s-2) calc(4rem + var(--s-15));
+}
+
+.aud-fold-body p {
+  margin: 0;
+  max-width: 52ch;
+  font-size: var(--text-lg);
+  color: color-mix(in srgb, currentColor 65%, transparent);
+}
+
+/* --- A: Nummerierte Liste ----------------------------------------------
+   Große Typo auf Haarlinien statt Karten. Der Text trägt sich selbst.
+   ------------------------------------------------------------------------ */
+
+.aud-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--border-soft);
+}
+
+.aud-item {
+  display: grid;
+  grid-template-columns: 5rem minmax(0, 1fr);
+  gap: var(--gap-sm);
+  padding: var(--s-3) 0;
+  border-bottom: 1px solid var(--border-soft);
+  transition: padding-left 0.4s var(--ease-out);
+}
+
+.aud-item:hover {
+  padding-left: var(--s-1);
+}
+
+.aud-item h3 {
+  margin: 0 0 0.3em;
+  font-size: clamp(1.4rem, 1rem + 1.5vw, 2.2rem);
+  letter-spacing: -0.022em;
+  line-height: 1.1em;
+}
+
+.aud-item p {
+  margin: 0;
+  max-width: 52ch;
+  color: color-mix(in srgb, currentColor 65%, transparent);
+}
+
+/* --- B: Bild links, Karten haften rechts -------------------------------
+   Wie bisher, aber die Karten überlappen leicht und haben eine Marke in
+   der Ecke — dadurch wirkt der Stapel gewollt statt zufällig.
+   ------------------------------------------------------------------------ */
+
+.aud-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  gap: var(--gap-lg);
+  align-items: start;
+}
+
+.aud-media {
+  position: sticky;
+  top: var(--s-2);
+  aspect-ratio: 2 / 3;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+}
+
+.aud-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.aud-cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-15);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.aud-card {
+  padding: var(--s-25, 2.5rem) var(--s-2);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-card);
+  background-color: var(--card-bg);
+  transition: border-color 0.3s var(--ease-out), transform 0.3s var(--ease-out);
+}
+
+.aud-card:hover {
+  border-color: var(--card-border-hover);
+  transform: translateY(-3px);
+}
+
+.aud-card h3 {
+  margin: 0 0 0.35em;
+  font-size: clamp(1.3rem, 1rem + 1vw, 1.8rem);
+  letter-spacing: -0.02em;
+}
+
+.aud-card p {
+  margin: 0;
+  max-width: 46ch;
+  color: color-mix(in srgb, currentColor 65%, transparent);
+}
+
+/* ==========================================================================
+   8. Merkmale
+   ========================================================================== */
+
+/* --- A: Haarliniennetz --------------------------------------------------
+   Kein Kasten je Merkmal, sondern ein durchgehendes Raster aus Linien.
+   Ruhiger und dichter als acht einzelne Karten.
+   ------------------------------------------------------------------------ */
+
+.feat-mesh {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--border-soft);
+  border-left: 1px solid var(--border-soft);
+}
+
+.feat-cell {
+  position: relative;
+  padding: var(--s-25, 2.5rem) var(--s-2);
+  border-right: 1px solid var(--border-soft);
+  border-bottom: 1px solid var(--border-soft);
+  transition: background-color 0.3s;
+}
+
+.feat-cell:hover {
+  background-color: color-mix(in srgb, var(--accent-link) 4%, transparent);
+}
+
+.feat-cell .icon,
+.feat-cell .feature-avatar,
+.feat-cell .feature-logo {
+  margin-bottom: var(--s-15);
+}
+
+.feat-cell h3 {
+  margin: 0 0 0.4em;
+  font-size: 1.1rem;
+  letter-spacing: -0.012em;
+}
+
+.feat-cell p {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: color-mix(in srgb, currentColor 68%, transparent);
+}
+
+/* --- B: Breite Zeilen mit Symbolspalte ---------------------------------
+   Zwei Spalten, in jeder Zeile Symbol und Text nebeneinander. Nutzt die
+   Breite besser und liest sich wie ein Register.
+   ------------------------------------------------------------------------ */
+
+.feat-lines {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 var(--gap-lg);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.feat-line {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr);
+  gap: var(--s-15);
+  align-items: start;
+  padding: var(--s-2) 0;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.feat-line h3 {
+  margin: 0 0 0.25em;
+  font-size: 1.1rem;
+  letter-spacing: -0.012em;
+}
+
+.feat-line p {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: color-mix(in srgb, currentColor 68%, transparent);
+}
+
+/* ==========================================================================
+   9. Kontakt
+   ========================================================================== */
+
+/* --- A: Ein Block, drei Spalten ----------------------------------------
+   Statt dreier Karten eine zusammenhängende Fläche mit Trennlinien —
+   dieselbe Ordnung wie die Kennzahlen-Registerzeile.
+   ------------------------------------------------------------------------ */
+
+.con-block {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border: 1px solid var(--border-soft);
+  border-radius: calc(var(--radius-card) * 1.4);
+  overflow: hidden;
+}
+
+.con-col {
+  padding: var(--s-3) var(--s-2);
+  border-right: 1px solid var(--border-soft);
+  transition: background-color 0.3s;
+}
+
+.con-col:last-child {
+  border-right: 0;
+}
+
+.con-col:hover {
+  background-color: color-mix(in srgb, currentColor 4%, transparent);
+}
+
+.con-label {
+  display: block;
+  margin-bottom: var(--s-15);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, currentColor 50%, transparent);
+}
+
+.con-value {
+  margin: 0 0 0.4em;
+  font-family: var(--font-heading);
+  font-size: clamp(1.2rem, 1rem + 0.8vw, 1.6rem);
+  letter-spacing: -0.018em;
+  font-style: normal;
+}
+
+.con-value a {
+  text-decoration: none;
+}
+
+.con-value a:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.con-note {
+  margin: 0;
+  max-width: 34ch;
+  font-size: var(--text-sm);
+  color: color-mix(in srgb, currentColor 62%, transparent);
+}
+
+.con-vera {
+  display: flex;
+  gap: var(--s-075);
+  align-items: flex-start;
+  margin-top: var(--s-1);
+  padding-top: var(--s-1);
+  border-top: 1px solid var(--border-soft);
+}
+
+.con-vera img {
+  flex: none;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--radius-pill);
+  object-fit: cover;
+  object-position: 50% 22%;
+}
+
+/* --- B: Kontaktband mit großer Nummer ----------------------------------
+   Die Rufnummer wird zur Hauptsache; alles andere ordnet sich unter.
+   ------------------------------------------------------------------------ */
+
+.con-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: var(--gap-md);
+  align-items: end;
+  padding: var(--s-4) var(--s-3);
+  border-radius: calc(var(--radius-card) * 1.6);
+  background:
+    radial-gradient(100% 120% at 0% 100%, color-mix(in srgb, var(--accent) 30%, transparent), transparent 55%),
+    color-mix(in srgb, currentColor 6%, transparent);
+}
+
+.con-hero-number {
+  display: block;
+  margin: 0.2em 0 0.3em;
+  font-family: var(--font-heading);
+  font-size: clamp(2.2rem, 1.2rem + 3.4vw, 4.2rem);
+  line-height: 1;
+  letter-spacing: -0.035em;
+  font-variant-numeric: lining-nums tabular-nums;
+  text-decoration: none;
+}
+
+.con-hero-number:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.12em;
+}
+
+.con-side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-15);
+}
+
+.con-side-item {
+  padding-top: var(--s-1);
+  border-top: 1px solid var(--border-soft);
+}
+
+/* --- C: Standort im Bild ------------------------------------------------
+   Links das Umfeld als Bild, rechts die Kontaktwege als knappe Liste.
+   Gibt der Adresse einen Ort statt nur einer Zeile.
+   ------------------------------------------------------------------------ */
+
+.con-place {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 0;
+  border: 1px solid var(--border-soft);
+  border-radius: calc(var(--radius-card) * 1.4);
+  overflow: hidden;
+}
+
+.con-place-media {
+  position: relative;
+  min-height: 22rem;
+}
+
+.con-place-media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.con-place-pin {
+  position: absolute;
+  left: var(--s-2);
+  bottom: var(--s-2);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  padding: 0.6em 1em;
+  border-radius: var(--radius-pill);
+  background-color: color-mix(in srgb, #1e1e1f 70%, transparent);
+  backdrop-filter: blur(14px);
+  color: #fff;
+  font-size: var(--text-sm);
+  text-decoration: none;
+}
+
+.con-place-pin .icon {
+  width: 1.1rem;
+  height: 1.1rem;
+  color: var(--accent-on-dark);
+}
+
+.con-place-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--s-3);
+}
+
+.con-place-row {
+  padding: var(--s-15) 0;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.con-place-row:last-child {
+  border-bottom: 0;
+}
+
+/* ==========================================================================
+   10. Fußbereich
+   ========================================================================== */
+
+/* --- C: Abschlussband ---------------------------------------------------
+   Über dem eigentlichen Fußbereich eine letzte, ruhige Aufforderung. Fasst
+   den Abschluss der Seite zusammen, statt sie auslaufen zu lassen.
+   ------------------------------------------------------------------------ */
+
+.foot-cta {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--gap-sm);
+  align-items: center;
+  padding: var(--s-4) var(--s-3);
+  border-radius: calc(var(--radius-card) * 1.6);
+  background:
+    radial-gradient(110% 140% at 100% 0%, color-mix(in srgb, var(--accent) 34%, transparent), transparent 60%),
+    color-mix(in srgb, currentColor 6%, transparent);
+}
+
+.foot-cta h3 {
+  margin: 0;
+  font-size: clamp(1.5rem, 1.1rem + 1.8vw, 2.4rem);
+  letter-spacing: -0.025em;
+  line-height: 1.12em;
+  max-width: 20ch;
+}
+
+.foot-cta .button-group {
+  margin-top: 0;
+}
+
+/* --- A: Großes Wortzeichen ---------------------------------------------
+   Die Marke schließt die Seite ab, Links ordnen sich in einer Zeile davor.
+   ------------------------------------------------------------------------ */
+
+.foot-a {
+  padding: var(--s-3) 0 0;
+}
+
+.foot-top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-bottom: var(--s-2);
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.foot-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-15);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--text-sm);
+}
+
+.foot-links a {
+  text-decoration: none;
+  color: color-mix(in srgb, currentColor 70%, transparent);
+  transition: color 0.2s;
+}
+
+.foot-links a:hover {
+  color: currentColor;
+}
+
+.foot-wordmark {
+  display: block;
+  width: 100%;
+  margin-top: var(--s-2);
+  opacity: 0.14;
+}
+
+.foot-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-1);
+  justify-content: space-between;
+  padding: var(--s-15) 0;
+  font-size: var(--text-sm);
+  color: color-mix(in srgb, currentColor 55%, transparent);
+}
+
+/* --- B: Dreispaltiger Abschluss ----------------------------------------
+   Adresse, Wege und Rechtliches nebeneinander; darunter eine ruhige
+   Schlusszeile mit der Bildmarke als Trenner.
+   ------------------------------------------------------------------------ */
+
+.foot-b {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) repeat(2, minmax(0, 1fr));
+  gap: var(--gap-md);
+  padding: var(--s-3) 0;
+}
+
+.foot-col h3 {
+  margin: 0 0 var(--s-1);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, currentColor 50%, transparent);
+}
+
+.foot-col p,
+.foot-col ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--text-sm);
+  line-height: 1.9em;
+  color: color-mix(in srgb, currentColor 72%, transparent);
+}
+
+.foot-col a {
+  text-decoration: none;
+}
+
+.foot-col a:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.foot-rule {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: var(--s-15) 0;
+  font-size: var(--text-sm);
+  color: color-mix(in srgb, currentColor 50%, transparent);
+}
+
+.foot-rule::before,
+.foot-rule::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background-color: currentColor;
+  opacity: 0.25;
+}
+
+/* ==========================================================================
+   11. Breakpoints
+   ========================================================================== */
+
+/* Bildmarke als Aufzählungszeichen und als Eckmarke. */
+.mark-bullets {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mark-bullets li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7em;
+  padding: 0.35em 0;
+  font-size: var(--text-sm);
+}
+
+.mark-bullets .mark {
+  flex: none;
+  width: 0.8rem;
+  height: 0.8rem;
+  color: var(--icon-accent);
+  transform: translateY(0.1em);
+}
+
+.mark-corners {
+  position: relative;
+  padding: var(--s-2);
+}
+
+.mark-corners::before,
+.mark-corners::after {
+  content: "";
+  position: absolute;
+  width: 1.1rem;
+  height: 1.1rem;
+  background-color: currentColor;
+  opacity: 0.35;
+  mask: url("../img/mark-preisser.svg") no-repeat center / contain;
+}
+
+.mark-corners::before { top: 0; left: 0; }
+.mark-corners::after { bottom: 0; right: 0; transform: scaleX(-1); }
+
+.mark-pulse {
+  width: 1.6rem;
+  height: 1.6rem;
+  animation: mark-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes mark-pulse {
+  0%, 100% { opacity: 0.35; transform: scale(0.9); }
+  50%      { opacity: 1;    transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mark-pulse {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+@media (max-width: 991px) {
+  .stat-register,
+  .stat-slabs,
+  .stat-band,
+  .feat-mesh,
+  .bento {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .bento-cell.is-wide,
+  .bento-cell.is-tall {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .stat-line {
+    grid-template-columns: 3rem minmax(0, 1fr);
+  }
+
+  .svc-stack-card,
+  .con-place {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .svc-sticky,
+  .svc-sticky:nth-child(2),
+  .svc-sticky:nth-child(3) {
+    position: static;
+  }
+
+  .con-place-media {
+    min-height: 16rem;
+  }
+
+  .foot-cta {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .stat-band {
+    position: static;
+    backdrop-filter: none;
+  }
+
+  .stat-band > *:nth-child(2n) {
+    border-right: 0;
+  }
+
+  /* Ab Tablet stehen Text und Bild untereinander, die Spiegelung entfällt. */
+  .svc-row {
+    grid-template-columns: 3rem minmax(0, 1fr);
+  }
+
+  .svc-row .svc-media,
+  .svc-row:nth-child(even) .svc-media {
+    grid-column: 1 / -1;
+    grid-row: auto;
+  }
+
+  .svc-row:nth-child(even) > div:not(.svc-media) {
+    grid-column: 2;
+    grid-row: auto;
+  }
+
+  .svc-panels {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .svc-panel {
+    height: 14rem;
+  }
+
+  .etg-stage,
+  .etg-panel,
+  .aud-split,
+  .con-hero,
+  .foot-b {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .aud-media {
+    position: static;
+    aspect-ratio: 16 / 10;
+  }
+
+  .con-block {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .con-col {
+    border-right: 0;
+    border-bottom: 1px solid var(--border-soft);
+  }
+
+  .con-col:last-child {
+    border-bottom: 0;
+  }
+
+  .mark-showcase {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 767px) {
+  .stage {
+    padding: var(--s-3) var(--s-1);
+  }
+
+  .stat-register,
+  .stat-slabs,
+  .stat-band,
+  .feat-mesh,
+  .feat-lines,
+  .bento {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .stat-line {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-05);
+  }
+
+  .aud-fold-body {
+    padding-left: 0;
+  }
+
+  .stat-register > *,
+  .stat-register > *:first-child,
+  .stat-register > *:last-child {
+    padding: var(--s-2) 0;
+    border-right: 0;
+  }
+
+  .feat-cell {
+    border-right: 0;
+  }
+
+  .aud-item,
+  .svc-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-1);
+  }
+}

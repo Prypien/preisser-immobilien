@@ -60,8 +60,10 @@
   // Skript vorher ab, bleibt der Text sichtbar.
   document.documentElement.classList.add('js-anim');
 
+  var animated = chunks.concat(rollers);
+
   if (reducedMotion.matches || !('IntersectionObserver' in window)) {
-    chunks.forEach(function (el) { el.classList.add('is-running'); });
+    animated.forEach(function (el) { el.classList.add('is-running'); });
   } else {
     var observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
@@ -71,17 +73,73 @@
       });
     }, { threshold: 0.25 });
 
-    chunks.forEach(function (el) { observer.observe(el); });
+    animated.forEach(function (el) { observer.observe(el); });
 
     // Sicherheitsnetz: Was nach zehn Sekunden noch nicht gelaufen ist, wird
     // einfach eingeblendet. Kein Text darf dauerhaft unsichtbar bleiben,
     // nur weil eine Beobachtung nicht ausgelöst hat.
     window.setTimeout(function () {
-      chunks.forEach(function (el) {
+      animated.forEach(function (el) {
         if (!el.classList.contains('is-running')) el.classList.add('is-running');
       });
     }, 10000);
   }
+
+  /* ---------------------------------------------------------------------
+     1b. Zählwerk
+
+     Jede Ziffer wird zu einer Walze: ein senkrechter Streifen mit 0–9,
+     zweimal hintereinander. Der Streifen fährt auf die Zielziffer in der
+     zweiten Runde — dadurch dreht die Walze einmal ganz durch, bevor sie
+     einrastet. Alles außer Ziffern bleibt stehen.
+     --------------------------------------------------------------------- */
+
+  var rollers = Array.prototype.slice.call(document.querySelectorAll('[data-roll]'));
+
+  function buildRoll(el) {
+    if (el.dataset.built === 'true') return;
+    var text = el.textContent.trim();
+    el.setAttribute('aria-label', text);
+    el.setAttribute('role', 'text');
+    el.textContent = '';
+
+    var digitIndex = 0;
+    Array.prototype.forEach.call(text, function (character) {
+      if (character < '0' || character > '9') {
+        var fixed = document.createElement('span');
+        fixed.className = 'roll-fixed';
+        fixed.setAttribute('aria-hidden', 'true');
+        fixed.textContent = character === ' ' ? ' ' : character;
+        el.appendChild(fixed);
+        return;
+      }
+
+      var column = document.createElement('span');
+      column.className = 'roll-col';
+      column.setAttribute('aria-hidden', 'true');
+
+      var strip = document.createElement('span');
+      strip.className = 'roll-strip';
+      for (var pass = 0; pass < 2; pass++) {
+        for (var d = 0; d <= 9; d++) {
+          var cell = document.createElement('span');
+          cell.className = 'roll-cell';
+          cell.textContent = String(d);
+          strip.appendChild(cell);
+        }
+      }
+      // Zielposition: einmal ganz durch (10) plus die Ziffer selbst.
+      strip.style.setProperty('--stop', 10 + Number(character));
+      strip.style.setProperty('--i', digitIndex);
+      column.appendChild(strip);
+      el.appendChild(column);
+      digitIndex += 1;
+    });
+
+    el.dataset.built = 'true';
+  }
+
+  rollers.forEach(buildRoll);
 
   /* ---------------------------------------------------------------------
      2. Wiederholen — spielt alle Textbewegungen einer Variante erneut ab.
@@ -91,7 +149,7 @@
     button.addEventListener('click', function () {
       var scope = document.getElementById(button.dataset.replay);
       if (!scope) return;
-      scope.querySelectorAll('.chars').forEach(function (el, i) {
+      scope.querySelectorAll('.chars, [data-roll]').forEach(function (el, i) {
         el.classList.remove('is-running');
         void el.offsetWidth;
         // Die Blöcke starten leicht versetzt, sonst wirkt es wie ein Ruck.

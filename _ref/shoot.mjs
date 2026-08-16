@@ -92,17 +92,20 @@ for (const w of widths) {
     return 1;
   })()`);
 
-  // Verbleibende Bilder erzwingen: loading="lazy" aufheben und abwarten.
+  // Verbleibende Bilder erzwingen: loading="lazy" aufheben, laden und
+  // dekodieren lassen. Ohne decode() sind Bilder zwar geladen, aber beim
+  // Auslösen der Aufnahme noch nicht gezeichnet.
   await evaluate(`(async () => {
     document.querySelectorAll('img[loading="lazy"]').forEach(i => { i.loading = 'eager'; });
     await Promise.race([
-      Promise.all([...document.images].filter(i => !i.complete)
-        .map(i => new Promise(r => { i.onload = i.onerror = r }))),
-      new Promise(r => setTimeout(r, 8000)),
+      Promise.all([...document.images].map(i =>
+        i.decode ? i.decode().catch(() => {})
+                 : new Promise(r => { i.onload = i.onerror = r }))),
+      new Promise(r => setTimeout(r, 12000)),
     ]);
     return 1;
   })()`);
-  await sleep(900);
+  await sleep(1200);
 
   const info = await evaluate(`JSON.stringify({
     h: document.documentElement.scrollHeight,

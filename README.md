@@ -7,15 +7,30 @@ Nachbau des früheren Webflow-Auftritts im selben Designsystem.
 ## Aufbau
 
 ```
-index.html            Startseite
-impressum.html        Impressum und Datenschutzerklärung
-assets/css/           Ein Stylesheet, nach Abschnitten gegliedert
-assets/js/main.js     Navigation, Kartenstapel, Einblenden beim Scrollen
-assets/fonts/         Instrument Sans + Poppins, selbst gehostet (DSGVO)
-assets/img/           WebP-Varianten für srcset
-assets/img/original/  Ausgangsdateien, aus denen die Varianten entstehen
-_ref/                 Werkzeuge für den Abgleich mit dem Original
+index.html                  Startseite
+impressum.html              Impressum und Datenschutzerklärung
+gestaltungsvarianten/       Entwürfe je Baustein, zum Vergleich (noindex)
+variante1/                  Vollständige Entwurfsfassung der Seite (noindex)
+
+assets/css/styles.css       Die Website: Tokens, Grundgerüst, Abschnitte
+assets/css/bausteine.css    Bauformen der Entwürfe, von beiden Entwurfsseiten genutzt
+assets/css/varianten.css    Nur das Gerüst der Vergleichsseite
+assets/css/variante1.css    Nur das Zusammenspiel der Abschnitte in Variante 1
+
+assets/js/main.js           Navigation, Kartenstapel, Einblenden beim Scrollen
+assets/js/varianten.js      Zeichenweise Bewegung, Zählwerk, Reiter
+
+assets/fonts/               Instrument Sans + Poppins, selbst gehostet (DSGVO)
+assets/img/                 WebP-Varianten für srcset
+assets/img/original/        Ausgangsdateien, aus denen die Varianten entstehen
+assets/img/mark-preisser.svg  Bildmarke aus dem Logo, als eigenes Zeichen
+_ref/                       Werkzeuge für Abgleich und Prüfung
 ```
+
+Die beiden Entwurfsseiten sind auf `noindex` gesetzt und nirgends verlinkt.
+`gestaltungsvarianten/` stellt je Baustein mehrere Entwürfe nebeneinander,
+`variante1/` setzt eine Auswahl davon zu einer fertigen Seite zusammen.
+Texte und Bilder sind dort überall unverändert.
 
 ## Lokal ansehen
 
@@ -40,6 +55,7 @@ Alle Skripte laufen aus dem Projektverzeichnis und brauchen nur Python 3
 | `python3 _ref/compare.py <breite>` | Stellt Original und Nachbau nebeneinander |
 | `python3 _ref/tile.py <bild> <präfix>` | Zerlegt einen langen Screenshot in betrachtbare Kacheln |
 | `python3 _ref/optimize-images.py [dateien…]` | Erzeugt die WebP-Varianten aus `assets/img/original/` |
+| `node _ref/find-overflow.mjs <url> <breite> [auswahl]` | Grenzt ein, welcher Abschnitt einen waagerechten Überlauf verursacht |
 
 Beispiel — nach einer Änderung prüfen, ob nichts über den Rand läuft:
 
