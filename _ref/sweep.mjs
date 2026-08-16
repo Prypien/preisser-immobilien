@@ -56,8 +56,13 @@ for (const width of widths) {
   });
   await send('Page.navigate', { url });
   await sleep(1600);
-  await evaluate(`Promise.all([...document.images].filter(i=>!i.complete)
-    .map(i=>new Promise(r=>{i.onload=i.onerror=r}))).then(()=>1)`);
+  // Zeitlimit: Bilder mit loading="lazy" außerhalb des Sichtfelds laden nie,
+  // ein unbegrenztes Warten bliebe hier hängen.
+  await evaluate(`Promise.race([
+    Promise.all([...document.images].filter(i => !i.complete)
+      .map(i => new Promise(r => { i.onload = i.onerror = r }))),
+    new Promise(r => setTimeout(r, 4000)),
+  ]).then(() => 1)`);
 
   const res = JSON.parse(await evaluate(`(() => {
     const de = document.documentElement, vw = de.clientWidth;

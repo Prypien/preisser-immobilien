@@ -14,7 +14,7 @@
   font-style: normal;
   font-weight: 400 700;
   font-display: swap;
-  src: url("../fonts/instrument-sans-400700-latin.woff2") format("woff2");
+  src: url("../fonts/instrument-sans-latin.woff2") format("woff2");
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
     U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
     U+2212, U+2215, U+FEFF, U+FFFD;
@@ -25,7 +25,7 @@
   font-style: normal;
   font-weight: 400 700;
   font-display: swap;
-  src: url("../fonts/instrument-sans-400700-latin-ext.woff2") format("woff2");
+  src: url("../fonts/instrument-sans-latin-ext.woff2") format("woff2");
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
     U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
     U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
@@ -36,7 +36,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("../fonts/poppins-400-latin.woff2") format("woff2");
+  src: url("../fonts/poppins-latin.woff2") format("woff2");
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
     U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
     U+2212, U+2215, U+FEFF, U+FFFD;
@@ -47,7 +47,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("../fonts/poppins-400-latin-ext.woff2") format("woff2");
+  src: url("../fonts/poppins-latin-ext.woff2") format("woff2");
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
     U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
     U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
@@ -109,6 +109,8 @@
   --text: var(--ink);
   --card-bg: var(--surface);
   --card-text: var(--ink);
+  --card-border: var(--ink-a10);
+  --card-border-hover: var(--ink-a20);
   --icon-accent: var(--accent-link);
   --link: var(--accent-link);
   --link-hover: var(--accent-link-hover);
@@ -133,14 +135,22 @@
   --h3-size: 1.78rem;
   --h4-size: 1.33rem;
   --h5-size: 1rem;
-  --heading-lh: 1.04em;
-  --heading-ls: -0.01em;
+
+  /* Zwei Zeilenhöhen: die enge bleibt der Titelzeile im Kopfbereich
+     vorbehalten, alle übrigen Überschriften bekommen etwas mehr Luft –
+     mehrzeilige Überschriften wirken damit ruhiger. */
+  --heading-lh-tight: 1.04em;
+  --heading-lh: 1.12em;
+  --heading-ls: -0.018em;
+  --heading-ls-small: -0.008em;
 
   --text-size: 1rem;
   --text-lg: 1.13rem;
   --text-sm: 0.88rem;
-  --text-lh: 1.6em;
-  --eyebrow-size: 0.9rem;
+  --text-lh: 1.6em;   /* Vorspann im Kopfbereich – bleibt unverändert */
+  --body-lh: 1.65em;  /* Fließtext, minimal luftiger */
+  --measure: 68ch;
+  --eyebrow-size: 0.8rem;
 
   /* Bewegung */
   --ease-out: cubic-bezier(0.165, 0.84, 0.44, 1);
@@ -153,6 +163,8 @@
   --text: var(--white);
   --card-bg: var(--white-a10);
   --card-text: var(--white);
+  --card-border: var(--white-a10);
+  --card-border-hover: var(--white-a20);
   --icon-accent: var(--accent-on-dark);
   --link: var(--white);
   --link-hover: var(--white-a60);
@@ -172,7 +184,8 @@
 html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
-  scroll-padding-top: var(--s-2);
+  /* Sprungziele dürfen nicht unter der haftenden Kopfzeile landen. */
+  scroll-padding-top: 6rem;
 }
 
 body {
@@ -290,19 +303,29 @@ h6 {
 
 p {
   margin: 0 0 0.7em;
+  line-height: var(--body-lh);
+  /* Verhindert Schusterjungen am Absatzende. */
+  text-wrap: pretty;
+}
+
+/* Fließtext bleibt lesbar breit, auch wenn die Spalte breiter wird.
+   (Karten sind ohnehin schmal und bringen eigene Maße mit.) */
+.section > .container > p,
+.legal p {
+  max-width: var(--measure);
 }
 
 strong,
 b {
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .h1 {
   margin-bottom: 0.3em;
   font-family: var(--font-heading);
   font-size: var(--h1-size);
-  line-height: var(--heading-lh);
-  letter-spacing: var(--heading-ls);
+  line-height: var(--heading-lh-tight);
+  letter-spacing: -0.01em;
   font-weight: 400;
   text-wrap: balance;
 }
@@ -330,9 +353,10 @@ b {
   margin-bottom: 0.35em;
   font-family: var(--font-heading);
   font-size: var(--h4-size);
-  line-height: 1.3em;
-  letter-spacing: var(--heading-ls);
+  line-height: 1.28em;
+  letter-spacing: var(--heading-ls-small);
   font-weight: 400;
+  text-wrap: balance;
 }
 
 .h5 {
@@ -344,16 +368,32 @@ b {
   font-weight: 400;
 }
 
+/* Gesperrte Versalien als ruhige Vorzeile – zusammen mit der feinen Linie
+   trennt das die Abschnitte klarer als bloß kleinerer Text. */
 .eyebrow {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75em;
   margin: 0 0 var(--s-125);
   font-family: var(--font-body);
   font-size: var(--eyebrow-size);
   line-height: 1.3em;
-  font-weight: 400;
-  letter-spacing: 0.01em;
+  font-weight: 500;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: color-mix(in srgb, currentColor 60%, transparent);
+  color: color-mix(in srgb, currentColor 55%, transparent);
+}
+
+.eyebrow::before {
+  content: "";
+  width: 1.75rem;
+  height: 1px;
+  background-color: currentColor;
+  opacity: 0.5;
+}
+
+.is-centered > .eyebrow::before {
+  display: none;
 }
 
 .text-lg {
@@ -616,12 +656,28 @@ b {
 
 /* Bewusst display:block — mehrere .card-body stapeln sich dadurch
    untereinander, so wie im Original. */
+/* Eine feine Kante auf allen Karten. Sie gibt den Flächen eine klare
+   Begrenzung, auch dort wo Karte und Hintergrund ähnlich hell sind, und
+   hält das Kartenbild über alle Abschnitte hinweg einheitlich. */
 .card {
   display: block;
+  border: 1px solid var(--card-border);
   border-radius: var(--radius-card);
   background-color: var(--card-bg);
   color: var(--card-text);
   overflow: hidden;
+  transition: border-color 0.3s var(--ease-out), transform 0.3s var(--ease-out);
+}
+
+/* Karten, die für sich stehen, heben sich beim Überfahren leicht an.
+   Ausgenommen sind die Karten im schrägen Stapel und die etg24-Kacheln,
+   deren Wirkung von ihrer festen Lage lebt. */
+.metric-card:hover,
+.audience-card:hover,
+.contact-card:hover,
+.etg-grid > .card:hover {
+  border-color: var(--card-border-hover);
+  transform: translateY(-2px);
 }
 
 .card-body {
@@ -1059,26 +1115,39 @@ b {
   gap: var(--gap-sm);
 }
 
+/* Die Kartenspalte überlagert das Bild bewusst. Damit das nicht nach Zufall
+   aussieht, bekommen die Karten eine echte Milchglasfläche mit feiner Kante –
+   der Text bleibt auf dem Foto lesbar, die Ebenen bleiben erkennbar. */
+.metric-card {
+  background-color: transparent;
+}
+
 .metric-card .card-body {
-  background-color: var(--ink-a40);
   align-items: center;
   justify-content: center;
+  gap: var(--s-075);
+  background-color: color-mix(in srgb, var(--ink) 62%, transparent);
+  backdrop-filter: blur(18px);
   text-align: center;
 }
 
 .metric-value {
   margin-bottom: 0;
   font-family: var(--font-heading);
-  font-size: var(--h3-size);
-  line-height: var(--heading-lh);
+  font-size: clamp(1.9rem, 1.2rem + 1.6vw, 2.6rem);
+  line-height: 1;
   letter-spacing: var(--heading-ls);
+  font-variant-numeric: lining-nums tabular-nums;
   transform-style: preserve-3d;
 }
 
 .metric-label {
+  max-width: 22ch;
   margin-bottom: 0;
-  font-size: var(--text-lg);
-  line-height: var(--text-lh);
+  font-size: var(--text-sm);
+  line-height: 1.45em;
+  letter-spacing: 0.01em;
+  color: var(--white-a60);
 }
 
 /* --- etg24 -------------------------------------------------------------- */
@@ -1140,46 +1209,83 @@ b {
   top: var(--section-pad);
 }
 
-.audience-card > .card-body:first-child {
-  aspect-ratio: 3 / 2;
+/* Im Original standen die Karten auf einem erzwungenen 3:2-Format plus einem
+   leeren zweiten Inhaltsblock – daher die großen toten Flächen. Statt dessen
+   eine ruhige Mindesthöhe mit senkrecht zentriertem Inhalt. */
+.audience-card {
+  min-height: 17rem;
 }
 
-/* Karten ohne zweiten Inhaltsblock behalten dessen Höhe als Luft am Fuß —
-   das hält die gestaffelte Stapelung wie im Original. */
-.audience-card.has-spacer {
-  padding-bottom: calc(var(--card-pad) * 2);
+.audience-card .card-body {
+  justify-content: center;
 }
 
 .audience-heading {
-  margin: 0 0 0.35em;
+  margin: 0 0 0.4em;
   font-family: var(--font-heading);
-  font-size: 2rem;
-  line-height: var(--heading-lh);
+  font-size: clamp(1.5rem, 1.1rem + 1vw, 2rem);
+  line-height: 1.14em;
   letter-spacing: var(--heading-ls);
   font-weight: 400;
+  text-wrap: balance;
+}
+
+.audience-card .text-lg {
+  max-width: 44ch;
+  color: var(--white-a60);
 }
 
 /* --- Leistungsmerkmale (Icon-Raster) ------------------------------------ */
 
+/* Acht gleichwertige Merkmale in vier Spalten – das Raster geht glatt auf,
+   statt wie im Original mit einer leeren Zelle aufgefüllt zu werden. Jede
+   Kachel steht auf einer eigenen Fläche; das wirkt geordneter als frei
+   schwebende Symbole. */
 .feature-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--gap-lg);
-  text-align: center;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--gap-xs);
 }
 
 .feature {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  padding: var(--s-2);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-card);
+  background-color: var(--bg);
+  transition: border-color 0.3s var(--ease-out), background-color 0.3s var(--ease-out),
+    transform 0.3s var(--ease-out);
 }
 
-.feature .icon.has-bg {
-  margin-bottom: var(--s-1);
+.feature:hover {
+  border-color: color-mix(in srgb, var(--accent-link) 35%, transparent);
+  background-color: color-mix(in srgb, var(--accent-link) 3%, var(--bg));
+  transform: translateY(-3px);
 }
 
-.feature-logo {
+.feature .icon.has-bg,
+.feature-logo,
+.feature-avatar {
+  margin-bottom: var(--s-125);
+}
+
+.feature .h4 {
+  margin-bottom: 0.4em;
+}
+
+.feature > p {
+  margin-bottom: 0;
+  font-size: var(--text-sm);
+  color: color-mix(in srgb, currentColor 72%, transparent);
+}
+
+/* Fremdlogo und Porträt greifen die runde Symbolfläche auf, damit die
+   Kacheln trotz unterschiedlicher Bildquellen gleich wirken. */
+.feature-logo,
+.feature-avatar {
   display: inline-flex;
+  flex: none;
   align-items: center;
   justify-content: center;
   width: 3rem;
@@ -1188,7 +1294,6 @@ b {
   box-sizing: content-box;
   border-radius: var(--radius-pill);
   background-color: color-mix(in srgb, currentColor 10%, transparent);
-  margin-bottom: var(--s-1);
 }
 
 .feature-logo img {
@@ -1196,13 +1301,112 @@ b {
   height: auto;
 }
 
+.feature-avatar {
+  padding: 0;
+  overflow: hidden;
+  width: 4rem;
+  height: 4rem;
+}
+
+/* Der Bildausschnitt liegt etwas höher, damit das Gesicht im runden
+   Rahmen mittig sitzt. */
+.feature-avatar img,
+.contact-vera-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 22%;
+}
+
 /* --- Kontakt ------------------------------------------------------------ */
 
 .contact-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--gap-sm);
+  gap: var(--gap-xs);
 }
+
+.contact-card .icon.has-bg {
+  margin-bottom: var(--s-15);
+}
+
+/* Die Rubrik tritt zurück, der eigentliche Kontaktweg nach vorn. */
+.contact-label {
+  margin-bottom: 0.35em;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--white-a60);
+}
+
+.contact-primary {
+  margin-bottom: 0.5em;
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  line-height: 1.35em;
+  letter-spacing: var(--heading-ls-small);
+  font-style: normal;
+}
+
+.contact-primary a {
+  text-decoration: none;
+  text-underline-offset: 0.2em;
+  transition: text-decoration-color 0.2s;
+}
+
+.contact-primary a:hover {
+  text-decoration: underline;
+}
+
+.contact-note {
+  margin-bottom: 0;
+  font-size: var(--text-sm);
+  line-height: 1.55em;
+  color: var(--white-a60);
+}
+
+.contact-note + .contact-note {
+  margin-top: var(--s-075);
+}
+
+.contact-action {
+  margin-top: auto;
+  padding-top: var(--s-1);
+  margin-bottom: 0;
+  font-size: var(--text-sm);
+}
+
+/* Kleine Auszeichnung für die Rund-um-die-Uhr-Erreichbarkeit. */
+.contact-badge {
+  display: inline-block;
+  margin-right: 0.4em;
+  padding: 0.15em 0.6em;
+  border-radius: var(--radius-pill);
+  background-color: color-mix(in srgb, var(--accent-on-dark) 22%, transparent);
+  color: var(--white);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.contact-vera {
+  display: flex;
+  gap: var(--s-075);
+  align-items: flex-start;
+  padding-top: var(--s-075);
+  border-top: 1px solid var(--white-a10);
+}
+
+.contact-vera-avatar {
+  flex: none;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
 
 /* --- Rechtstexte -------------------------------------------------------- */
 
@@ -1421,6 +1625,10 @@ b {
     grid-template-columns: minmax(200px, 1fr) minmax(200px, 1.5fr);
   }
 
+  .feature-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .hero-media {
     order: -1;
     min-height: 0;
@@ -1489,13 +1697,18 @@ b {
   }
 
   .metrics-cards,
-  .feature-grid,
   .contact-grid {
     grid-template-columns: minmax(0, 1fr);
   }
 
+  /* Zwei Kacheln nebeneinander bleiben auf großen Telefonen lesbar und
+     halten den Abschnitt kompakt. */
   .feature-grid {
-    gap: var(--gap-sm);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .feature {
+    padding: var(--s-15);
   }
 
   /* Ab hier bleibt nur die Textspalte – wie im Original. */
@@ -1515,12 +1728,8 @@ b {
     position: static;
   }
 
-  .audience-card .card-body {
-    aspect-ratio: auto;
-  }
-
-  .audience-card .card-body:empty {
-    display: none;
+  .audience-card {
+    min-height: 0;
   }
 
   .footer-row {
@@ -1568,6 +1777,12 @@ b {
   .etg-wide,
   .etg-tall {
     grid-column: auto;
+  }
+
+  /* Unter 480 px wird eine zweite Spalte zu schmal für Überschrift und
+     Beschreibung – die Kacheln stehen dann untereinander. */
+  .feature-grid {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .footer-social {

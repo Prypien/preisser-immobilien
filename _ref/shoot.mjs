@@ -68,20 +68,32 @@ for (const w of widths) {
     screenWidth: width, screenHeight: height,
   });
   await send('Page.navigate', { url });
-  await sleep(2500);
-  await evaluate(`Promise.all([...document.images].filter(i=>!i.complete)
-    .map(i=>new Promise(r=>{i.onload=i.onerror=r}))).then(()=>1)`);
+  await sleep(2000);
 
-  // Durchscrollen, damit Scroll-Animationen ihren Endzustand einnehmen.
+  // Erst durchscrollen (löst Scroll-Animationen aus und stößt das
+  // Nachladen der Bilder an), dann auf die Bilder warten – mit Zeitlimit,
+  // denn Bilder mit loading="lazy" außerhalb des Sichtfelds laden nie und
+  // ein unbegrenztes Warten würde hier hängen bleiben.
   await evaluate(`(async () => {
     const step = innerHeight * 0.6;
     for (let y = 0; y < document.documentElement.scrollHeight; y += step) {
       scrollTo(0, y); await new Promise(r => setTimeout(r, 80));
     }
-    scrollTo(0, 0); await new Promise(r => setTimeout(r, 700));
+    scrollTo(0, 0); await new Promise(r => setTimeout(r, 500));
     return 1;
   })()`);
-  await sleep(700);
+
+  // Verbleibende Bilder erzwingen: loading="lazy" aufheben und abwarten.
+  await evaluate(`(async () => {
+    document.querySelectorAll('img[loading="lazy"]').forEach(i => { i.loading = 'eager'; });
+    await Promise.race([
+      Promise.all([...document.images].filter(i => !i.complete)
+        .map(i => new Promise(r => { i.onload = i.onerror = r }))),
+      new Promise(r => setTimeout(r, 8000)),
+    ]);
+    return 1;
+  })()`);
+  await sleep(900);
 
   const info = await evaluate(`JSON.stringify({
     h: document.documentElement.scrollHeight,
