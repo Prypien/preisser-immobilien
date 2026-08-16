@@ -1,6 +1,5 @@
-# Logs
-logs/
-*.log
+# Werkzeug-Logs deines Rechners – gehören nicht ins Projekt
+logs/mcp_server.log
 
 # macOS
 .DS_Store
@@ -17,6 +16,3 @@ dist/
 build/
 __pycache__/
 .venv/
-
-# Screenshot-Artefakte (jederzeit neu erzeugbar, ~30 MB)
-shots/
