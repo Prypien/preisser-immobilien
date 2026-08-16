@@ -12,6 +12,7 @@ impressum.html              Impressum und Datenschutzerklärung
 gestaltungsvarianten/       Entwürfe je Baustein, zum Vergleich (noindex)
 variante1/                  Ruhige Entwurfsfassung der Seite (noindex)
 variante2/                  Kür-Fassung, Kopfbereich unverändert (noindex)
+variante3/                  Gewählte Mischung der Bausteine (noindex)
 
 assets/css/styles.css       Die Website: Tokens, Grundgerüst, Abschnitte
 assets/css/bausteine.css    Bauformen der Entwürfe, von beiden Entwurfsseiten genutzt
@@ -20,6 +21,7 @@ assets/css/kuer.css         Die aufwendigen Bauformen: Fallblatt, Ausgestanzt,
 assets/css/varianten.css    Nur das Gerüst der Vergleichsseite
 assets/css/variante1.css    Nur das Zusammenspiel der Abschnitte in Variante 1
 assets/css/variante2.css    Nur das Zusammenspiel der Abschnitte in Variante 2
+assets/css/variante3.css    Nur das Zusammenspiel der Abschnitte in Variante 3
 
 assets/js/main.js           Navigation, Kartenstapel, Einblenden beim Scrollen
 assets/js/varianten.js      Zeichenweise Bewegung, Zählwerk, Reiter
@@ -36,7 +38,10 @@ Die Entwurfsseiten sind auf `noindex` gesetzt und nirgends verlinkt.
 `gestaltungsvarianten/` stellt je Baustein mehrere Entwürfe nebeneinander,
 `variante1/` setzt eine ruhige Auswahl davon zu einer fertigen Seite zusammen,
 `variante2/` ist die Kür: Kopfbereich und Navigation unverändert, alles
-darunter neu inszeniert. Schriften, Farben, Texte und Bilder sind überall
+darunter neu inszeniert. `variante3/` ist die abgestimmte Mischung —
+Kopf- und Titelbereich, Leistungen, Zielgruppen und Kontakt bleiben wie auf
+der Website, ausgetauscht sind Kennzahlen, digitale Verwaltung, Merkmale
+und Fußbereich. Schriften, Farben, Texte und Bilder sind überall
 dieselben.
 
 Jede Bewegung hat einen sichtbaren Ruhezustand: fällt das Skript aus oder

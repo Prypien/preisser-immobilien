@@ -184,8 +184,10 @@
 html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
-  /* Sprungziele dürfen nicht unter der haftenden Kopfzeile landen. */
-  scroll-padding-top: 6rem;
+  /* Sprungziele dürfen nicht hinter der haftenden Kopfzeile landen. Die
+     tatsächliche Kopfhöhe trägt main.js als --nav-h ein; der feste Wert
+     greift, solange das Skript noch nicht gelaufen ist. */
+  scroll-padding-top: calc(var(--nav-h, 8.5rem) + var(--s-1));
 }
 
 body {

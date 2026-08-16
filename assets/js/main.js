@@ -22,6 +22,23 @@
   var navToggle = document.querySelector('[data-nav-toggle]');
   var navMenu = document.querySelector('[data-nav-menu]');
 
+  /* Höhe der haftenden Kopfzeile als CSS-Variable bereitstellen. Ohne sie
+     landen Sprungziele hinter dem Kopf: der feste Abstand im Stylesheet
+     kann die tatsächliche Höhe nicht kennen, die sich mit Logo, Schrift-
+     größe und Breite ändert. */
+  function measureNav() {
+    if (!nav) return;
+    var height = Math.round(nav.getBoundingClientRect().height);
+    if (height > 0) document.documentElement.style.setProperty('--nav-h', height + 'px');
+  }
+
+  if (nav) {
+    measureNav();
+    window.addEventListener('resize', measureNav);
+    window.addEventListener('load', measureNav);
+    if ('ResizeObserver' in window) new ResizeObserver(measureNav).observe(nav);
+  }
+
   function setMenu(open) {
     if (!nav || !navToggle) return;
     nav.setAttribute('data-open', open ? 'true' : 'false');
