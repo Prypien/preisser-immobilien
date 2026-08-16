@@ -17,3 +17,6 @@ dist/
 build/
 __pycache__/
 .venv/
+
+# Screenshot-Artefakte (jederzeit neu erzeugbar, ~30 MB)
+shots/

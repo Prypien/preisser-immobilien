@@ -1,0 +1,104 @@
+// Vollseiten-Screenshot mit exakt emuliertem Viewport.
+//   node _ref/shoot.mjs <url> <praefix> <breite> [weitere breiten...]
+//
+// Chrome erzwingt eine Mindest-Fensterbreite; --window-size allein liefert
+// daher bei 375 px ein falsches Layout. Deshalb wird die Größe über
+// Emulation.setDeviceMetricsOverride gesetzt.
+import { spawn } from 'node:child_process';
+import { writeFileSync } from 'node:fs';
+import { setTimeout as sleep } from 'node:timers/promises';
+
+const [url, prefix, ...widths] = process.argv.slice(2);
+const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+const PORT = 9500 + (Number(process.env.PORT_OFFSET) || 0);
+
+const chrome = spawn(CHROME, [
+  '--headless', '--disable-gpu', '--hide-scrollbars',
+  '--force-device-scale-factor=1',
+  `--remote-debugging-port=${PORT}`,
+  '--window-size=1600,1000',
+  '--user-data-dir=/tmp/cdp-shoot-' + PORT,
+  'about:blank',
+], { stdio: 'ignore' });
+process.on('exit', () => { try { chrome.kill(); } catch {} });
+
+let wsUrl;
+for (let i = 0; i < 60; i++) {
+  await sleep(250);
+  try {
+    const list = await (await fetch(`http://127.0.0.1:${PORT}/json/list`)).json();
+    const page = list.find((t) => t.type === 'page');
+    if (page?.webSocketDebuggerUrl) { wsUrl = page.webSocketDebuggerUrl; break; }
+  } catch {}
+}
+if (!wsUrl) { console.error('Chrome nicht erreichbar'); process.exit(1); }
+
+const ws = new WebSocket(wsUrl);
+await new Promise((res, rej) => { ws.onopen = res; ws.onerror = rej; });
+let nextId = 1;
+const pending = new Map();
+ws.onmessage = (ev) => {
+  const m = JSON.parse(ev.data);
+  if (m.id && pending.has(m.id)) {
+    const { resolve, reject } = pending.get(m.id);
+    pending.delete(m.id);
+    m.error ? reject(new Error(JSON.stringify(m.error))) : resolve(m.result);
+  }
+};
+const send = (method, params = {}) => new Promise((resolve, reject) => {
+  const id = nextId++;
+  pending.set(id, { resolve, reject });
+  ws.send(JSON.stringify({ id, method, params }));
+});
+const evaluate = async (expression) => {
+  const r = await send('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true });
+  if (r.exceptionDetails) throw new Error(r.exceptionDetails.exception?.description || 'Fehler');
+  return r.result.value;
+};
+
+await send('Page.enable');
+await send('Runtime.enable');
+
+for (const w of widths) {
+  const width = Number(w);
+  const height = width <= 480 ? 812 : width <= 800 ? 1024 : 900;
+  await send('Emulation.setDeviceMetricsOverride', {
+    width, height, deviceScaleFactor: 1,
+    mobile: width <= 480,
+    screenWidth: width, screenHeight: height,
+  });
+  await send('Page.navigate', { url });
+  await sleep(2500);
+  await evaluate(`Promise.all([...document.images].filter(i=>!i.complete)
+    .map(i=>new Promise(r=>{i.onload=i.onerror=r}))).then(()=>1)`);
+
+  // Durchscrollen, damit Scroll-Animationen ihren Endzustand einnehmen.
+  await evaluate(`(async () => {
+    const step = innerHeight * 0.6;
+    for (let y = 0; y < document.documentElement.scrollHeight; y += step) {
+      scrollTo(0, y); await new Promise(r => setTimeout(r, 80));
+    }
+    scrollTo(0, 0); await new Promise(r => setTimeout(r, 700));
+    return 1;
+  })()`);
+  await sleep(700);
+
+  const info = await evaluate(`JSON.stringify({
+    h: document.documentElement.scrollHeight,
+    sw: document.documentElement.scrollWidth,
+    vw: document.documentElement.clientWidth
+  })`);
+  const { h, sw, vw } = JSON.parse(info);
+
+  const shot = await send('Page.captureScreenshot', {
+    format: 'png', captureBeyondViewport: true,
+    clip: { x: 0, y: 0, width, height: h, scale: 1 },
+  });
+  const file = `shots/${prefix}-${width}.png`;
+  writeFileSync(file, Buffer.from(shot.data, 'base64'));
+  const flag = sw > vw ? `  ⚠ waagerechter Überlauf: scrollWidth ${sw} > ${vw}` : '  ✓ kein Überlauf';
+  console.log(`${file}  ${width}x${h}${flag}`);
+}
+
+ws.close();
+process.exit(0);
