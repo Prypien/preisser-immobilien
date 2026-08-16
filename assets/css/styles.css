@@ -136,21 +136,14 @@
   --h4-size: 1.33rem;
   --h5-size: 1rem;
 
-  /* Zwei Zeilenhöhen: die enge bleibt der Titelzeile im Kopfbereich
-     vorbehalten, alle übrigen Überschriften bekommen etwas mehr Luft –
-     mehrzeilige Überschriften wirken damit ruhiger. */
-  --heading-lh-tight: 1.04em;
-  --heading-lh: 1.12em;
-  --heading-ls: -0.018em;
-  --heading-ls-small: -0.008em;
+  --heading-lh: 1.04em;
+  --heading-ls: -0.01em;
 
   --text-size: 1rem;
   --text-lg: 1.13rem;
   --text-sm: 0.88rem;
-  --text-lh: 1.6em;   /* Vorspann im Kopfbereich – bleibt unverändert */
-  --body-lh: 1.65em;  /* Fließtext, minimal luftiger */
-  --measure: 68ch;
-  --eyebrow-size: 0.8rem;
+  --text-lh: 1.6em;
+  --eyebrow-size: 0.9rem;
 
   /* Bewegung */
   --ease-out: cubic-bezier(0.165, 0.84, 0.44, 1);
@@ -194,10 +187,12 @@ body {
   margin: 0;
   background-color: var(--white);
   color: var(--ink);
-  font-family: var(--font-body);
-  font-size: var(--text-size);
+  /* Wie im Original: unausgezeichneter Fließtext fällt auf Arial 14 px
+     zurück. Die ausgezeichneten Klassen setzen die Systemschrift. */
+  font-family: Arial, sans-serif;
+  font-size: 14px;
   font-weight: 400;
-  line-height: var(--text-lh);
+  line-height: 20px;
   letter-spacing: 0;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
@@ -304,30 +299,20 @@ h6 {
 }
 
 p {
-  margin: 0 0 0.7em;
-  line-height: var(--body-lh);
-  /* Verhindert Schusterjungen am Absatzende. */
-  text-wrap: pretty;
-}
-
-/* Fließtext bleibt lesbar breit, auch wenn die Spalte breiter wird.
-   (Karten sind ohnehin schmal und bringen eigene Maße mit.) */
-.section > .container > p,
-.legal p {
-  max-width: var(--measure);
+  margin: 0 0 10px;
 }
 
 strong,
 b {
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .h1 {
   margin-bottom: 0.3em;
   font-family: var(--font-heading);
   font-size: var(--h1-size);
-  line-height: var(--heading-lh-tight);
-  letter-spacing: -0.01em;
+  line-height: var(--heading-lh);
+  letter-spacing: var(--heading-ls);
   font-weight: 400;
   text-wrap: balance;
 }
@@ -355,10 +340,9 @@ b {
   margin-bottom: 0.35em;
   font-family: var(--font-heading);
   font-size: var(--h4-size);
-  line-height: 1.28em;
-  letter-spacing: var(--heading-ls-small);
+  line-height: 1.3em;
+  letter-spacing: var(--heading-ls);
   font-weight: 400;
-  text-wrap: balance;
 }
 
 .h5 {
@@ -370,42 +354,28 @@ b {
   font-weight: 400;
 }
 
-/* Gesperrte Versalien als ruhige Vorzeile – zusammen mit der feinen Linie
-   trennt das die Abschnitte klarer als bloß kleinerer Text. */
 .eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75em;
+  display: inline-block;
   margin: 0 0 var(--s-125);
   font-family: var(--font-body);
   font-size: var(--eyebrow-size);
   line-height: 1.3em;
-  font-weight: 500;
-  letter-spacing: 0.14em;
+  font-weight: 400;
+  letter-spacing: 0.01em;
   text-transform: uppercase;
-  color: color-mix(in srgb, currentColor 55%, transparent);
-}
-
-.eyebrow::before {
-  content: "";
-  width: 1.75rem;
-  height: 1px;
-  background-color: currentColor;
-  opacity: 0.5;
-}
-
-.is-centered > .eyebrow::before {
-  display: none;
+  color: color-mix(in srgb, currentColor 60%, transparent);
 }
 
 .text-lg {
   margin-bottom: 0.7em;
+  font-family: var(--font-body);
   font-size: var(--text-lg);
   line-height: var(--text-lh);
 }
 
 .text-sm {
   margin-bottom: 0.7em;
+  font-family: var(--font-body);
   font-size: var(--text-sm);
   line-height: var(--text-lh);
 }
@@ -421,6 +391,7 @@ b {
 .subheading {
   max-width: var(--container-sm);
   margin-bottom: var(--s-125);
+  font-family: var(--font-body);
   font-size: var(--text-lg);
   line-height: var(--text-lh);
   color: color-mix(in srgb, currentColor 70%, transparent);
@@ -658,28 +629,12 @@ b {
 
 /* Bewusst display:block — mehrere .card-body stapeln sich dadurch
    untereinander, so wie im Original. */
-/* Eine feine Kante auf allen Karten. Sie gibt den Flächen eine klare
-   Begrenzung, auch dort wo Karte und Hintergrund ähnlich hell sind, und
-   hält das Kartenbild über alle Abschnitte hinweg einheitlich. */
 .card {
   display: block;
-  border: 1px solid var(--card-border);
   border-radius: var(--radius-card);
   background-color: var(--card-bg);
   color: var(--card-text);
   overflow: hidden;
-  transition: border-color 0.3s var(--ease-out), transform 0.3s var(--ease-out);
-}
-
-/* Karten, die für sich stehen, heben sich beim Überfahren leicht an.
-   Ausgenommen sind die Karten im schrägen Stapel und die etg24-Kacheln,
-   deren Wirkung von ihrer festen Lage lebt. */
-.metric-card:hover,
-.audience-card:hover,
-.contact-card:hover,
-.etg-grid > .card:hover {
-  border-color: var(--card-border-hover);
-  transform: translateY(-2px);
 }
 
 .card-body {
@@ -1077,12 +1032,8 @@ b {
   z-index: 2;
 }
 
-/* Die Karten im Stapel bleiben ohne Kontur — wie im Original. Sie liegen
-   schräg übereinander; eine Kante würde die Überlappung betonen, statt sie
-   verschwimmen zu lassen. */
 .card-stack .card {
   flex-direction: column;
-  border-color: transparent;
 }
 
 .card-stack .frame {
@@ -1121,39 +1072,26 @@ b {
   gap: var(--gap-sm);
 }
 
-/* Die Kartenspalte überlagert das Bild bewusst. Damit das nicht nach Zufall
-   aussieht, bekommen die Karten eine echte Milchglasfläche mit feiner Kante –
-   der Text bleibt auf dem Foto lesbar, die Ebenen bleiben erkennbar. */
-.metric-card {
-  background-color: transparent;
-}
-
 .metric-card .card-body {
+  background-color: var(--ink-a40);
   align-items: center;
   justify-content: center;
-  gap: var(--s-075);
-  background-color: color-mix(in srgb, var(--ink) 62%, transparent);
-  backdrop-filter: blur(18px);
   text-align: center;
 }
 
 .metric-value {
   margin-bottom: 0;
   font-family: var(--font-heading);
-  font-size: clamp(1.9rem, 1.2rem + 1.6vw, 2.6rem);
-  line-height: 1;
+  font-size: var(--h3-size);
+  line-height: var(--heading-lh);
   letter-spacing: var(--heading-ls);
-  font-variant-numeric: lining-nums tabular-nums;
   transform-style: preserve-3d;
 }
 
 .metric-label {
-  max-width: 22ch;
   margin-bottom: 0;
-  font-size: var(--text-sm);
-  line-height: 1.45em;
-  letter-spacing: 0.01em;
-  color: var(--white-a60);
+  font-size: var(--text-lg);
+  line-height: var(--text-lh);
 }
 
 /* --- etg24 -------------------------------------------------------------- */
@@ -1215,79 +1153,48 @@ b {
   top: var(--section-pad);
 }
 
-/* Im Original standen die Karten auf einem erzwungenen 3:2-Format plus einem
-   leeren zweiten Inhaltsblock – daher die großen toten Flächen. Statt dessen
-   eine ruhige Mindesthöhe mit senkrecht zentriertem Inhalt. */
-.audience-card {
-  min-height: 17rem;
+.audience-card > .card-body:first-child {
+  aspect-ratio: 3 / 2;
 }
 
-.audience-card .card-body {
-  justify-content: center;
+/* Karten ohne zweiten Inhaltsblock behalten dessen Höhe als Luft am Fuß —
+   das hält die gestaffelte Stapelung wie im Original. */
+.audience-card.has-spacer {
+  padding-bottom: calc(var(--card-pad) * 2);
 }
 
 .audience-heading {
-  margin: 0 0 0.4em;
+  margin: 0 0 0.35em;
   font-family: var(--font-heading);
-  font-size: clamp(1.5rem, 1.1rem + 1vw, 2rem);
-  line-height: 1.14em;
+  font-size: 2rem;
+  line-height: var(--heading-lh);
   letter-spacing: var(--heading-ls);
   font-weight: 400;
-  text-wrap: balance;
-}
-
-.audience-card .text-lg {
-  max-width: 44ch;
-  color: var(--white-a60);
 }
 
 /* --- Leistungsmerkmale (Icon-Raster) ------------------------------------ */
 
-/* Acht gleichwertige Merkmale in vier Spalten – das Raster geht glatt auf,
-   statt wie im Original mit einer leeren Zelle aufgefüllt zu werden. Jede
-   Kachel steht auf einer eigenen Fläche; das wirkt geordneter als frei
-   schwebende Symbole. */
 .feature-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: var(--gap-xs);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--gap-lg);
+  text-align: center;
 }
 
 .feature {
   display: flex;
   flex-direction: column;
-  padding: var(--s-2);
-  border: 1px solid var(--border-soft);
-  border-radius: var(--radius-card);
-  background-color: var(--bg);
-  transition: border-color 0.3s var(--ease-out), background-color 0.3s var(--ease-out),
-    transform 0.3s var(--ease-out);
-}
-
-.feature:hover {
-  border-color: color-mix(in srgb, var(--accent-link) 35%, transparent);
-  background-color: color-mix(in srgb, var(--accent-link) 3%, var(--bg));
-  transform: translateY(-3px);
+  align-items: center;
 }
 
 .feature .icon.has-bg,
 .feature-logo,
 .feature-avatar {
-  margin-bottom: var(--s-125);
+  margin-bottom: var(--s-1);
 }
 
-.feature .h4 {
-  margin-bottom: 0.4em;
-}
-
-.feature > p {
-  margin-bottom: 0;
-  font-size: var(--text-sm);
-  color: color-mix(in srgb, currentColor 72%, transparent);
-}
-
-/* Fremdlogo und Porträt greifen die runde Symbolfläche auf, damit die
-   Kacheln trotz unterschiedlicher Bildquellen gleich wirken. */
+/* Fremdlogo und Porträt greifen die runde Symbolfläche auf, damit Vera und
+   das Verbandszeichen wie die übrigen Symbole wirken. */
 .feature-logo,
 .feature-avatar {
   display: inline-flex;
@@ -1316,8 +1223,7 @@ b {
 
 /* Der Bildausschnitt liegt etwas höher, damit das Gesicht im runden
    Rahmen mittig sitzt. */
-.feature-avatar img,
-.contact-vera-avatar img {
+.feature-avatar img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -1329,62 +1235,17 @@ b {
 .contact-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--gap-xs);
-}
-
-.contact-card .icon.has-bg {
-  margin-bottom: var(--s-15);
-}
-
-/* Die Rubrik tritt zurück, der eigentliche Kontaktweg nach vorn. */
-.contact-label {
-  margin-bottom: 0.35em;
-  font-family: var(--font-body);
-  font-size: var(--text-sm);
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--white-a60);
-}
-
-.contact-primary {
-  margin-bottom: 0.5em;
-  font-family: var(--font-heading);
-  font-size: 1.25rem;
-  line-height: 1.35em;
-  letter-spacing: var(--heading-ls-small);
-  font-style: normal;
-}
-
-.contact-primary a {
-  text-decoration: none;
-  text-underline-offset: 0.2em;
-  transition: text-decoration-color 0.2s;
-}
-
-.contact-primary a:hover {
-  text-decoration: underline;
-}
-
-.contact-note {
-  margin-bottom: 0;
-  font-size: var(--text-sm);
-  line-height: 1.55em;
-  color: var(--white-a60);
-}
-
-.contact-note + .contact-note {
-  margin-top: var(--s-075);
-}
-
-.contact-action {
-  margin-top: auto;
-  padding-top: var(--s-1);
-  margin-bottom: 0;
-  font-size: var(--text-sm);
+  gap: var(--gap-sm);
 }
 
 /* Kleine Auszeichnung für die Rund-um-die-Uhr-Erreichbarkeit. */
+/* Die Adresse bleibt semantisch in <address>, das Element selbst erzeugt
+   aber keinen eigenen Kasten — so ist der Link wie im Original unmittelbares
+   Kind der Karte und nimmt deren Breite ein. */
+.card-body > address {
+  display: contents;
+}
+
 .contact-badge {
   display: inline-block;
   margin-right: 0.4em;
@@ -1397,21 +1258,6 @@ b {
   letter-spacing: 0.04em;
 }
 
-.contact-vera {
-  display: flex;
-  gap: var(--s-075);
-  align-items: flex-start;
-  padding-top: var(--s-075);
-  border-top: 1px solid var(--white-a10);
-}
-
-.contact-vera-avatar {
-  flex: none;
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: var(--radius-pill);
-  overflow: hidden;
-}
 
 
 /* --- Rechtstexte -------------------------------------------------------- */
@@ -1641,9 +1487,6 @@ b {
     grid-template-columns: minmax(200px, 1fr) minmax(200px, 1.5fr);
   }
 
-  .feature-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
 
   .hero-media {
     order: -1;
@@ -1717,14 +1560,9 @@ b {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  /* Zwei Kacheln nebeneinander bleiben auf großen Telefonen lesbar und
-     halten den Abschnitt kompakt. */
   .feature-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .feature {
-    padding: var(--s-15);
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--gap-sm);
   }
 
   /* Ab hier bleibt nur die Textspalte – wie im Original. */
@@ -1744,8 +1582,8 @@ b {
     position: static;
   }
 
-  .audience-card {
-    min-height: 0;
+  .audience-card .card-body {
+    aspect-ratio: auto;
   }
 
   .footer-row {
@@ -1795,11 +1633,6 @@ b {
     grid-column: auto;
   }
 
-  /* Unter 480 px wird eine zweite Spalte zu schmal für Überschrift und
-     Beschreibung – die Kacheln stehen dann untereinander. */
-  .feature-grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
 
   .footer-social {
     justify-content: space-between;

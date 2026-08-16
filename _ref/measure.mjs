@@ -67,7 +67,13 @@ await send('Runtime.enable');
 await send('Page.navigate', { url });
 await sleep(4500);
 // Alle Bilder abwarten, damit Höhen stimmen
-await evaluate(`Promise.all([...document.images].filter(i=>!i.complete).map(i=>new Promise(r=>{i.onload=i.onerror=r}))).then(()=>1)`);
+// Zeitlimit: Bilder mit loading="lazy" außerhalb des Sichtfelds laden nie,
+// ein unbegrenztes Warten bliebe hier hängen.
+await evaluate(`Promise.race([
+  Promise.all([...document.images].filter(i => !i.complete)
+    .map(i => new Promise(r => { i.onload = i.onerror = r }))),
+  new Promise(r => setTimeout(r, 5000)),
+]).then(() => 1)`);
 await sleep(1000);
 
 // Einmal durch die ganze Seite scrollen, damit Scroll-Animationen auslösen,

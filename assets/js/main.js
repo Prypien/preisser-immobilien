@@ -100,14 +100,8 @@
       setDropdown(dropdown, open);
     });
 
-    // Auf dem Desktop öffnet bereits der Mauszeiger.
-    dropdown.addEventListener('mouseenter', function () {
-      if (!compact.matches) setDropdown(dropdown, true);
-    });
-
-    dropdown.addEventListener('mouseleave', function () {
-      if (!compact.matches) setDropdown(dropdown, false);
-    });
+    // Kein Öffnen beim Überfahren: das Original trägt data-hover="false",
+    // das Menü geht dort ausschließlich auf Klick auf.
 
     // Tastaturfokus verlässt das Menü -> schließen.
     dropdown.addEventListener('focusout', function (event) {
