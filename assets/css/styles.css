@@ -1075,8 +1075,12 @@ b {
   z-index: 2;
 }
 
+/* Die Karten im Stapel bleiben ohne Kontur — wie im Original. Sie liegen
+   schräg übereinander; eine Kante würde die Überlappung betonen, statt sie
+   verschwimmen zu lassen. */
 .card-stack .card {
   flex-direction: column;
+  border-color: transparent;
 }
 
 .card-stack .frame {
@@ -1450,21 +1454,31 @@ b {
    8. Bewegung
    ========================================================================== */
 
-/* Kartenstapel: --reveal läuft per JS von 0 bis 1 über den Scrollbereich.
-   Bis 0,5 fächern die Karten auf, danach wandern sie leicht auseinander. */
+/* Kartenstapel — nachgerechnet aus den drei Stützstellen des Originals.
+   --reveal läuft per JS von 0 bis 1 über den Scrollbereich:
+
+                  Anfang (0)        Mitte (0,5)      Ende (1)
+     links   x     35 %              0 %              −10 %
+             y     −3 %              0 %              3 %
+             Drehung  −3°            −9°              −9°
+     rechts  spiegelbildlich
+
+   Zwischen den Stützstellen wird linear interpoliert. Entscheidend ist die
+   Mitte: dort stehen die Karten kurz in der Nulllage, bevor sie wieder
+   auseinanderwandern. Ohne diesen Durchgang wirkt die Bewegung härter. */
 @media (min-width: 768px) {
   .card-stack-item.is-left {
     transform:
-      translateX(calc((35% - 45% * min(var(--reveal), 0.5) * 2) * 1))
-      translateY(calc(-3% + 6% * max(var(--reveal) - 0.5, 0) * 2))
-      rotate(calc(-3deg - 6deg * min(var(--reveal), 0.5) * 2));
+      translateX(calc(35% - 70% * min(var(--reveal), 0.5) - 20% * max(var(--reveal) - 0.5, 0)))
+      translateY(calc(-3% + 6% * min(var(--reveal), 0.5) + 6% * max(var(--reveal) - 0.5, 0)))
+      rotate(calc(-3deg - 12deg * min(var(--reveal), 0.5)));
   }
 
   .card-stack-item.is-right {
     transform:
-      translateX(calc((-35% + 45% * min(var(--reveal), 0.5) * 2) * 1))
-      translateY(calc(-3% + 6% * max(var(--reveal) - 0.5, 0) * 2))
-      rotate(calc(3deg + 6deg * min(var(--reveal), 0.5) * 2));
+      translateX(calc(-35% + 70% * min(var(--reveal), 0.5) + 20% * max(var(--reveal) - 0.5, 0)))
+      translateY(calc(-3% + 6% * min(var(--reveal), 0.5) + 6% * max(var(--reveal) - 0.5, 0)))
+      rotate(calc(3deg + 12deg * min(var(--reveal), 0.5)));
   }
 }
 
