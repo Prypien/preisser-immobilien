@@ -43,8 +43,12 @@ Die Entwurfsseiten sind auf `noindex` gesetzt und nirgends verlinkt.
 darunter neu inszeniert. `variante3/` ist die abgestimmte Mischung —
 Kopf- und Titelbereich, Leistungen, Zielgruppen und Kontakt bleiben wie auf
 der Website, ausgetauscht sind Kennzahlen, digitale Verwaltung, Merkmale
-und Fußbereich. Schriften, Farben, Texte und Bilder sind überall
-dieselben.
+und Fußbereich. `variante4/` mischt anders: Kennzahlen aus Variante 2,
+digitale Verwaltung und Merkmale aus Variante 1, alles Übrige von der
+Hauptseite. Schriften, Farben, Texte und Bilder sind überall dieselben.
+
+Die Startseite selbst ist bewusst streng am Original gehalten,
+einschließlich seiner Eigenheiten wie dem Fließtext in Arial 14 px.
 
 Jede Bewegung hat einen sichtbaren Ruhezustand: fällt das Skript aus oder
 löst eine Beobachtung nicht aus, steht der richtige Inhalt trotzdem da.
@@ -98,7 +102,6 @@ Fehler und Lücken des Originals; sie sind an den betroffenen Stellen im
 Stylesheet kommentiert. Die wichtigsten:
 
 - Navigation auf Telefon und Tablet (im Original fehlte sie dort ganz)
-- Fließtext in der Systemschrift statt Arial 14 px (Webflow-Rückfall)
 - Sprachauszeichnung, Sprungmarke, Fokusringe, ARIA-Zustände
 - Bilder als WebP mit `srcset`, Schriften lokal statt von Google-Servern
 - Bewegungen respektieren `prefers-reduced-motion`
