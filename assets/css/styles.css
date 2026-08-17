@@ -109,8 +109,6 @@
   --text: var(--ink);
   --card-bg: var(--surface);
   --card-text: var(--ink);
-  --card-border: var(--ink-a10);
-  --card-border-hover: var(--ink-a20);
   --icon-accent: var(--accent-link);
   --link: var(--accent-link);
   --link-hover: var(--accent-link-hover);
@@ -156,8 +154,6 @@
   --text: var(--white);
   --card-bg: var(--white-a10);
   --card-text: var(--white);
-  --card-border: var(--white-a10);
-  --card-border-hover: var(--white-a20);
   --icon-accent: var(--accent-on-dark);
   --link: var(--white);
   --link-hover: var(--white-a60);
@@ -1174,10 +1170,12 @@ b {
 
 /* --- Leistungsmerkmale (Icon-Raster) ------------------------------------ */
 
+/* Acht Merkmale in zwei Reihen zu vier. Der Abstand ist enger als bei drei
+   Spalten, sonst bleibt für Überschrift und Beschreibung zu wenig Breite. */
 .feature-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--gap-lg);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--gap-md) var(--gap-sm);
   text-align: center;
 }
 
@@ -1492,6 +1490,12 @@ b {
     order: -1;
     min-height: 0;
     aspect-ratio: 16 / 9;
+  }
+
+  /* Vier Spalten werden hier zu schmal — zwei Reihen zu vier werden zu
+     vier Reihen zu zwei. */
+  .feature-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .metrics-grid {

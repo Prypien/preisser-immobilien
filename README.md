@@ -9,49 +9,20 @@ Nachbau des früheren Webflow-Auftritts im selben Designsystem.
 ```
 index.html                  Startseite
 impressum.html              Impressum und Datenschutzerklärung
-gestaltungsvarianten/       Entwürfe je Baustein, zum Vergleich (noindex)
-variante1/                  Ruhige Entwurfsfassung der Seite (noindex)
-variante2/                  Kür-Fassung, Kopfbereich unverändert (noindex)
-variante3/                  Gewählte Mischung der Bausteine (noindex)
-variante4/                  Zweite gewählte Mischung (noindex)
 
-assets/css/styles.css       Die Website: Tokens, Grundgerüst, Abschnitte
-assets/css/bausteine.css    Bauformen der Entwürfe, von beiden Entwurfsseiten genutzt
-assets/css/kuer.css         Die aufwendigen Bauformen: Fallblatt, Ausgestanzt,
-                            Querlauf, Maskenwechsel, Umlaufband, Leuchtkontakt
-assets/css/varianten.css    Nur das Gerüst der Vergleichsseite
-assets/css/variante1.css    Nur das Zusammenspiel der Abschnitte in Variante 1
-assets/css/variante2.css    Nur das Zusammenspiel der Abschnitte in Variante 2
-assets/css/variante3.css    Nur das Zusammenspiel der Abschnitte in Variante 3
-assets/css/variante4.css    Nur das Zusammenspiel der Abschnitte in Variante 4
+assets/css/styles.css       Tokens, Grundgerüst, Abschnitte
 
 assets/js/main.js           Navigation, Kartenstapel, Einblenden beim Scrollen
-assets/js/varianten.js      Zeichenweise Bewegung, Zählwerk, Reiter
-assets/js/kuer.js           Fallblatt, kinetische Zeilen, Querlauf, Blende, Leuchte
 
 assets/fonts/               Instrument Sans + Poppins, selbst gehostet (DSGVO)
 assets/img/                 WebP-Varianten für srcset
 assets/img/original/        Ausgangsdateien, aus denen die Varianten entstehen
-assets/img/mark-preisser.svg  Bildmarke aus dem Logo, als eigenes Zeichen
 _ref/                       Werkzeuge für Abgleich und Prüfung
 ```
 
-Die Entwurfsseiten sind auf `noindex` gesetzt und nirgends verlinkt.
-`gestaltungsvarianten/` stellt je Baustein mehrere Entwürfe nebeneinander,
-`variante1/` setzt eine ruhige Auswahl davon zu einer fertigen Seite zusammen,
-`variante2/` ist die Kür: Kopfbereich und Navigation unverändert, alles
-darunter neu inszeniert. `variante3/` ist die abgestimmte Mischung —
-Kopf- und Titelbereich, Leistungen, Zielgruppen und Kontakt bleiben wie auf
-der Website, ausgetauscht sind Kennzahlen, digitale Verwaltung, Merkmale
-und Fußbereich. `variante4/` mischt anders: Kennzahlen aus Variante 2,
-digitale Verwaltung und Merkmale aus Variante 1, alles Übrige von der
-Hauptseite. Schriften, Farben, Texte und Bilder sind überall dieselben.
-
-Die Startseite selbst ist bewusst streng am Original gehalten,
-einschließlich seiner Eigenheiten wie dem Fließtext in Arial 14 px.
-
-Jede Bewegung hat einen sichtbaren Ruhezustand: fällt das Skript aus oder
-löst eine Beobachtung nicht aus, steht der richtige Inhalt trotzdem da.
+Die Seite ist bewusst streng am früheren Auftritt gehalten, einschließlich
+seiner Eigenheiten wie dem Fließtext in Arial 14 px. Abweichungen sind unten
+aufgeführt und an den betroffenen Stellen im Stylesheet kommentiert.
 
 ## Lokal ansehen
 
@@ -105,3 +76,5 @@ Stylesheet kommentiert. Die wichtigsten:
 - Sprachauszeichnung, Sprungmarke, Fokusringe, ARIA-Zustände
 - Bilder als WebP mit `srcset`, Schriften lokal statt von Google-Servern
 - Bewegungen respektieren `prefers-reduced-motion`
+- Die acht Merkmale stehen in zwei Reihen zu vier statt in drei Spalten
+- Vera von HeyVera ergänzt: als achtes Merkmal und in der Telefonkarte

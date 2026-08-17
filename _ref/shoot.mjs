@@ -57,6 +57,10 @@ const evaluate = async (expression) => {
 };
 
 await send('Page.enable');
+await send('Network.enable');
+// Ohne das liefert Chrome zwischengespeicherte Stylesheets aus und die
+// Aufnahme zeigt einen alten Stand.
+await send('Network.setCacheDisabled', { cacheDisabled: true });
 await send('Runtime.enable');
 
 for (const w of widths) {
