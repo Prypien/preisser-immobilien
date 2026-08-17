@@ -1,0 +1,112 @@
+/* =============================================================================
+   Variante 4 — gewählte Mischung
+   Kopfbereich, Titelbereich, Leistungen, Zielgruppen, Kontakt und Fußbereich
+   stammen unverändert von der Hauptseite. Ausgetauscht sind:
+
+     Kennzahlen           aus Variante 2 — ausgestanzte Leitzahl und
+                          Fallblattanzeige auf dunklem, körnigem Grund
+     Digitale Verwaltung  aus Variante 1 — Bento-Raster
+     Merkmale             aus Variante 1 — Haarliniennetz
+
+   Hier steht nur, was diese drei Abschnitte im Verbund brauchen. Alles
+   Weitere kommt aus styles.css, bausteine.css und kuer.css.
+   ========================================================================== */
+
+/* --- Kennzahlen (aus Variante 2) ---------------------------------------- */
+
+.v2-h2 {
+  margin: 0 0 var(--s-3);
+  font-size: clamp(2.2rem, 1rem + 5vw, 4.5rem);
+  color: #fff;
+}
+
+.v2-stats .cutout-row {
+  border-bottom-color: var(--white-a20);
+}
+
+.v2-board-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--gap-sm);
+  margin-top: var(--s-3);
+}
+
+.v2-board-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+  padding-top: var(--s-2);
+  border-top: 1px solid var(--white-a20);
+}
+
+.v2-board {
+  font-size: clamp(1.6rem, 1rem + 2.2vw, 2.8rem);
+}
+
+/* --- Digitale Verwaltung (aus Variante 1) ------------------------------- */
+
+.v1-bento .bento-cell.is-accent {
+  min-height: 16rem;
+  justify-content: flex-end;
+}
+
+.v1-bento .bento-cell.is-accent .button-group {
+  margin-top: var(--s-15);
+}
+
+/* Die Hauptseite setzt ihre Abschnittsüberschriften über .header-block;
+   die übernommenen Abschnitte bringen ihre eigene mit. Damit der Rhythmus
+   über die ganze Seite gleich bleibt, bekommen sie denselben Abstand. */
+.opener {
+  max-width: 46rem;
+  margin-bottom: var(--s-3);
+}
+
+.opener h2 {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: var(--h2-size);
+  line-height: var(--heading-lh);
+  letter-spacing: var(--heading-ls);
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+.opener.is-centered {
+  max-width: 44rem;
+  margin-inline: auto;
+  text-align: center;
+}
+
+/* --- Hinweisleiste ------------------------------------------------------ */
+
+.draft-bar {
+  position: relative;
+  z-index: 100;
+  padding: 0.6rem var(--s-1);
+  background-color: var(--accent);
+  color: #fff;
+  font-size: var(--text-sm);
+  text-align: center;
+}
+
+.draft-bar a {
+  color: #fff;
+  text-underline-offset: 0.2em;
+}
+
+@media (max-width: 991px) {
+  .v2-board-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .v2-h2 {
+    margin-bottom: var(--s-2);
+  }
+}
+
+@media (max-width: 767px) {
+  .v2-board-item {
+    padding-top: var(--s-15);
+  }
+}

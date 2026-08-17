@@ -13,6 +13,7 @@ gestaltungsvarianten/       Entwürfe je Baustein, zum Vergleich (noindex)
 variante1/                  Ruhige Entwurfsfassung der Seite (noindex)
 variante2/                  Kür-Fassung, Kopfbereich unverändert (noindex)
 variante3/                  Gewählte Mischung der Bausteine (noindex)
+variante4/                  Zweite gewählte Mischung (noindex)
 
 assets/css/styles.css       Die Website: Tokens, Grundgerüst, Abschnitte
 assets/css/bausteine.css    Bauformen der Entwürfe, von beiden Entwurfsseiten genutzt
@@ -22,6 +23,7 @@ assets/css/varianten.css    Nur das Gerüst der Vergleichsseite
 assets/css/variante1.css    Nur das Zusammenspiel der Abschnitte in Variante 1
 assets/css/variante2.css    Nur das Zusammenspiel der Abschnitte in Variante 2
 assets/css/variante3.css    Nur das Zusammenspiel der Abschnitte in Variante 3
+assets/css/variante4.css    Nur das Zusammenspiel der Abschnitte in Variante 4
 
 assets/js/main.js           Navigation, Kartenstapel, Einblenden beim Scrollen
 assets/js/varianten.js      Zeichenweise Bewegung, Zählwerk, Reiter
