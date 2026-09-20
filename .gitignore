@@ -16,3 +16,6 @@ dist/
 build/
 __pycache__/
 .venv/
+
+# Bauergebnis (jederzeit über build.sh neu erzeugbar)
+dist/
