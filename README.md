@@ -24,6 +24,18 @@ Die Seite ist bewusst streng am früheren Auftritt gehalten, einschließlich
 seiner Eigenheiten wie dem Fließtext in Arial 14 px. Abweichungen sind unten
 aufgeführt und an den betroffenen Stellen im Stylesheet kommentiert.
 
+## Veröffentlichen
+
+`sh build.sh` stellt in `dist/` zusammen, was ausgeliefert wird — ohne die
+Werkzeuge unter `_ref/`, die Screenshots und die Ausgangsbilder unter
+`assets/img/original/`.
+
+Der Arbeitsablauf unter `.github/workflows/pages.yml` führt das bei jedem
+Push auf `main` aus und veröffentlicht `dist/` über GitHub Pages. `CNAME`
+hält die eigene Domain fest, `_headers` setzt Zwischenspeicher- und
+Sicherheitsregeln — Letzteres wirkt nur bei Cloudflare Pages und Netlify,
+GitHub Pages ignoriert die Datei.
+
 ## Lokal ansehen
 
 ```bash

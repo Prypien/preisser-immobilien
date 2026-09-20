@@ -1,0 +1,58 @@
+# Veröffentlicht die Website bei jedem Push auf main über GitHub Pages.
+#
+# Warum ein Arbeitsablauf und nicht die einfache Zweig-Veröffentlichung:
+# GitHub Pages würde sonst das gesamte Repository ausliefern, also auch die
+# Werkzeuge unter _ref/ und die Ausgangsbilder. Hier läuft erst build.sh,
+# veröffentlicht wird nur dist/.
+
+name: Website veröffentlichen
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Läuft eine Veröffentlichung bereits, wird sie nicht abgebrochen —
+# sonst kann die Seite kurzzeitig unvollständig sein.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  bauen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: dist/ zusammenstellen
+        run: sh build.sh
+
+      - name: Prüfen, dass kein Arbeitsmaterial mitgeht
+        run: |
+          for verzeichnis in _ref shots assets/img/original; do
+            if [ -e "dist/$verzeichnis" ]; then
+              echo "Abbruch: dist/$verzeichnis würde veröffentlicht."
+              exit 1
+            fi
+          done
+          echo "In Ordnung — $(find dist -type f | wc -l | tr -d ' ') Dateien, $(du -sh dist | cut -f1)"
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  veroeffentlichen:
+    needs: bauen
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

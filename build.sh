@@ -19,8 +19,13 @@ cp index.html impressum.html "$ZIEL/"
 cp -R assets "$ZIEL/assets"
 rm -rf "$ZIEL/assets/img/original"
 
-# Kopf- und Zwischenspeicher-Regeln; Cloudflare Pages und Netlify lesen diese Datei.
+# Kopf- und Zwischenspeicher-Regeln. Cloudflare Pages und Netlify lesen diese
+# Datei; GitHub Pages ignoriert sie (dort lassen sich keine Kopfzeilen setzen).
 cp _headers "$ZIEL/_headers" 2>/dev/null || true
+
+# Eigene Domain für GitHub Pages. Ohne diese Datei fällt die Seite bei jeder
+# Veröffentlichung auf die Adresse *.github.io zurück.
+cp CNAME "$ZIEL/CNAME" 2>/dev/null || true
 
 echo "Fertig: $ZIEL"
 du -sh "$ZIEL"
